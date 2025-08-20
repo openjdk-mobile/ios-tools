@@ -30,9 +30,12 @@ jobs:
           distribution: 'temurin'
 
       - name: Download and unzip mobile-support
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          curl -L -o mobile-support.zip https://download2.gluonhq.com/mobile/mobile-support-20250106.zip
-          unzip -q mobile-support.zip -d ..
+          gh release download libffi-build --pattern "libffi-ios.zip"
+          mkdir -p ../support
+          unzip libffi-ios.zip -d ../support
           ls -l ..
           pwd
           echo "$(realpath ../support)"

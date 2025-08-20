@@ -24,7 +24,7 @@ jobs:
       - name: Package libffi
         run: |
           mkdir -p dist
-          cp build/universal/libffi.a dist/
+          cp build/Release-iphoneos/libffi.a dist/
           cp -r build/Release-iphoneos/include dist/
           cd dist && zip -r ../libffi-ios.zip .
           cd ..

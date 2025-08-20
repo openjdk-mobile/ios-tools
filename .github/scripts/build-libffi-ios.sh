@@ -48,15 +48,3 @@ xcodebuild \
   SYMROOT=$OUTPUT_DIR \
   build
 
-echo "All built, now lipo"
-
-# 6. Merge into universal static lib
-mkdir -p $OUTPUT_DIR/universal
-lipo -create \
-  $OUTPUT_DIR/Release-iphoneos/libffi.a \
-  $OUTPUT_DIR/Release-iphonesimulator/libffi.a \
-  -output $OUTPUT_DIR/universal/libffi.a
-
-echo "✅ Built libffi $LIBFFI_VERSION"
-echo "📦 Universal lib: $OUTPUT_DIR/universal/libffi.a"
-echo "📂 Headers: $OUTPUT_DIR/Release-iphoneos/include/ffi/"

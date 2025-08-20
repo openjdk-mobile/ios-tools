@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -20,7 +23,7 @@ jobs:
           # This will make GNU make available as 'make' and not only as 'gmake' 
           echo '/usr/local/opt/make/libexec/gnubin' >> $GITHUB_PATH
 
-      - name: Set up JDK 25
+      - name: Set up JDK 24
         uses: actions/setup-java@v4
         with:
           java-version: '24'

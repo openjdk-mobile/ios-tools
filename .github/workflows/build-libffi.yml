@@ -19,7 +19,7 @@ jobs:
         run: |
           chmod +x .github/scripts/build-libffi-ios.sh
           .github/scripts/build-libffi-ios.sh
-          continue-on-error: true
+        continue-on-error: true
 
       - name: Package libffi
         run: |

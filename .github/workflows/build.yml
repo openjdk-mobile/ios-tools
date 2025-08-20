@@ -31,8 +31,9 @@ jobs:
 
       - name: Download and unzip mobile-support
         run: |
-          curl -L -o mobile-support.zip https://download2.gluonhq.com/mobile/mobile-support-20250106.zip
-          unzip -q mobile-support.zip -d ..
+          gh release download libffi-build --pattern "libffi-ios.zip"
+          mkdir -p ../support
+          unzip libffi-ios.zip -d ../support
           ls -l ..
           pwd
           echo "$(realpath ../support)"

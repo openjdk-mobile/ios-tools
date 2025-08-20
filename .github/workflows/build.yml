@@ -30,6 +30,8 @@ jobs:
           distribution: 'temurin'
 
       - name: Download and unzip mobile-support
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release download libffi-build --pattern "libffi-ios.zip"
           mkdir -p ../support

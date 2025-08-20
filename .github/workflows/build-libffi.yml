@@ -17,6 +17,7 @@ jobs:
 
       - name: Build libffi for iOS
         run: |
+          chmod +x .github/scripts/build-libffi-ios.sh
           .github/scripts/build-libffi-ios.sh
 
       - name: Package libffi

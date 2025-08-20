@@ -42,7 +42,6 @@ jobs:
           echo "unzip done"
           ls -l ..
           ls -l ../support
-          ls -l ../support/libffi
           pwd
           echo "$(realpath ../support)"
 

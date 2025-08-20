@@ -1,0 +1,42 @@
+name: Build libffi for iOS
+
+permissions:
+  contents: write
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # manual trigger 
+
+jobs:
+  build-libffi:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install deps
+        run: brew install automake autoconf libtool
+
+      - name: Build libffi for iOS
+        run: |
+          chmod +x .github/scripts/build-libffi-ios.sh
+          .github/scripts/build-libffi-ios.sh
+        continue-on-error: true
+
+      - name: Package libffi
+        run: |
+          mkdir -p dist
+          cp build/Release-iphoneos/libffi.a dist/
+          cp -r build/Release-iphoneos/include dist/
+          cd dist && zip -r ../libffi-ios.zip .
+          cd ..
+
+      - name: Upload libffi to release (tag "libffi-build")
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: libffi-build
+          name: "libffi iOS build"
+          files: libffi-ios.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

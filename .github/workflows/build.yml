@@ -32,7 +32,7 @@ jobs:
       - name: Download and unzip mobile-support
         run: |
           curl -L -o mobile-support.zip https://download2.gluonhq.com/mobile/mobile-support-20250106.zip
-          unzip -q mobile-support.zip
+          unzip -q mobile-support.zip -d ..
           ls -l ..
           pwd
           echo "$(realpath ../support)"
@@ -49,13 +49,13 @@ jobs:
           pwd
           ls -l .
           ls -l ..
-          ls -l ../support
+          ls -l ../../support
           bash configure \
           --with-conf-name=ios-aarch64-zero-release \
           --disable-warnings-as-errors \
           --openjdk-target=aarch64-macos-ios \
           --with-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk \
-          --with-libffi-include=$(realpath ../support/libffi/include) \
-          --with-libffi-lib=$(realpath ../support/libffi/libs) \
-          --with-cups-include=$(realpath ../support/cups-2.3.6)
+          --with-libffi-include=$(realpath ../../support/libffi/include) \
+          --with-libffi-lib=$(realpath ../../support/libffi/libs) \
+          --with-cups-include=$(realpath ../../support/cups-2.3.6)
           make LOG=cmdlines,info CONF=ios-aarch64-zero-release static-libs-image

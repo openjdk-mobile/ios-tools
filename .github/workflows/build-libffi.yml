@@ -1,6 +1,9 @@
 name: Build libffi for iOS
 
 on:
+  pull_request:
+    branches:
+      - main
   workflow_dispatch: # manual trigger 
 
 jobs:

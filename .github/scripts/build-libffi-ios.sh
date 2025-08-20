@@ -48,6 +48,8 @@ xcodebuild \
   SYMROOT=$OUTPUT_DIR \
   build
 
+echo "All built, now lipo"
+
 # 6. Merge into universal static lib
 mkdir -p $OUTPUT_DIR/universal
 lipo -create \

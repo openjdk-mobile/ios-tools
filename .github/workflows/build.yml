@@ -49,7 +49,7 @@ jobs:
           pwd
           ls -l .
           ls -l ..
-          ls -l ../../support
+          ls -l ../support
           bash configure \
           --with-conf-name=ios-aarch64-zero-release \
           --disable-warnings-as-errors \

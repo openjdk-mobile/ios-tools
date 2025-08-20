@@ -14,7 +14,7 @@ fi
 
 cd $LIBFFI_SRC
 
-python3 generate-darwin-source-and-headers.py --only-ios
+python3 generate-darwin-source-and-headers.py --only-ios || true
 
 rm -rf $OUTPUT_DIR
 mkdir -p $OUTPUT_DIR

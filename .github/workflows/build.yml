@@ -1,0 +1,58 @@
+name: Build OpenJDK Mobile
+
+on:
+  workflow_dispatch: # manual trigger
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: 'Install toolchain and dependencies'
+        run: |
+          # Run Homebrew installation and xcode-select
+          brew install libffi
+          brew install autoconf make
+          sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+          # This will make GNU make available as 'make' and not only as 'gmake' 
+          echo '/usr/local/opt/make/libexec/gnubin' >> $GITHUB_PATH
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '24'
+          distribution: 'temurin'
+
+      - name: Download and unzip mobile-support
+        run: |
+          curl -L -o mobile-support.zip https://download2.gluonhq.com/mobile/mobile-support-20250106.zip
+          unzip -q mobile-support.zip -d ..
+          ls -l ..
+          pwd
+          echo "$(realpath ../support)"
+
+      - name: Checkout builder repo
+        uses: actions/checkout@v3
+
+      - name: Clone OpenJDK Mobile sources
+        run: |
+          git clone https://github.com/openjdk/mobile.git
+          cd mobile
+          # optionally checkout a specific branch or tag
+          git checkout master
+          pwd
+          ls -l .
+          ls -l ..
+          ls -l ../../support
+          bash configure \
+          --with-conf-name=ios-aarch64-zero-release \
+          --disable-warnings-as-errors \
+          --openjdk-target=aarch64-macos-ios \
+          --with-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk \
+          --with-libffi-include=$(realpath ../../support/libffi/include) \
+          --with-libffi-lib=$(realpath ../../support/libffi/libs) \
+          --with-cups-include=$(realpath ../../support/cups-2.3.6)
+          make LOG=cmdlines,info CONF=ios-aarch64-zero-release static-libs-image

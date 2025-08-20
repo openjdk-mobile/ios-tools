@@ -61,7 +61,7 @@ jobs:
           --disable-warnings-as-errors \
           --openjdk-target=aarch64-macos-ios \
           --with-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk \
-          --with-libffi-include=$(realpath ../../support/libffi/include) \
-          --with-libffi-lib=$(realpath ../../support/libffi/libs) \
+          --with-libffi-include=$(realpath ../../support/include) \
+          --with-libffi-lib=$(realpath ../../support) \
           --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
           make LOG=cmdlines,info CONF=ios-aarch64-zero-release static-libs-image

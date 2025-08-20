@@ -1,5 +1,8 @@
 name: Build libffi for iOS
 
+permissions:
+  contents: write
+
 on:
   pull_request:
     branches:

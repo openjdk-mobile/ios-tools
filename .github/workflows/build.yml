@@ -39,7 +39,10 @@ jobs:
           gh release download libffi-build --pattern "libffi-ios.zip"
           mkdir -p ../support
           unzip libffi-ios.zip -d ../support
+          echo "unzip done"
           ls -l ..
+          ls -l ../support
+          ls -l ../support/libffi
           pwd
           echo "$(realpath ../support)"
 

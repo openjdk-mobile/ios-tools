@@ -31,12 +31,17 @@ jobs:
           cp -r build/Release-iphoneos/include dist/
           cd dist && zip -r ../libffi-ios.zip .
           cd ..
+          mkdir -p dists-im
+          cp build/Release-iphonesimulator/libffi.a dist-sim/
+          cp -r build/Release-iphoneos/include dist-sim/
+          cd dist-sim && zip -r ../libffi-ios.zip .
+          cd ..
 
       - name: Upload libffi to release (tag "libffi-build")
         uses: softprops/action-gh-release@v1
         with:
           tag_name: libffi-build
           name: "libffi iOS build"
-          files: libffi-ios.zip
+          files: libffi-ios.zip libffi-ios-sim.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

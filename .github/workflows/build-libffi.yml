@@ -43,6 +43,8 @@ jobs:
         with:
           tag_name: libffi-build
           name: "libffi iOS build"
-          files: libffi-ios-sim.zip
+          files: |
+            libffi-ios.zip
+            libffi-ios-sim.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

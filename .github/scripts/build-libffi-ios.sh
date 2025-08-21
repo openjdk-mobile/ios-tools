@@ -36,7 +36,7 @@ xcodebuild \
   -sdk iphonesimulator \
   -configuration Release \
   -arch x86_64 \
-  SYMROOT=$OUTPUT_DIR \
+  SYMROOT=$OUTPUT_DIR/x86_64 \
   build
 
 xcodebuild \
@@ -45,6 +45,8 @@ xcodebuild \
   -sdk iphonesimulator \
   -configuration Release \
   -arch arm64 \
-  SYMROOT=$OUTPUT_DIR \
+  SYMROOT=$OUTPUT_DIR/arm64 \
   build
 
+mkdir -p $OUTPUT_DIR/Release-iPhonesimulator
+lipo -create -output $OUTPUT_DIR/Release-iPhonesimulator/libffi.a $OUTPUT_DIR/x86_64/Release-iphonesimulator/libffi.a $OUTPUT_DIR/arm64/Release-iphonesimulator/libffi.a

@@ -31,7 +31,7 @@ jobs:
           cp -r build/Release-iphoneos/include dist/
           cd dist && zip -r ../libffi-ios.zip .
           cd ..
-          mkdir -p dists-sim
+          mkdir -p dist-sim
           cp build/Release-iphonesimulator/libffi.a dist-sim/
           cp -r build/Release-iphoneos/include dist-sim/
           cd dist-sim && zip -r ../libffi-ios.zip .

@@ -1,0 +1,66 @@
+name: Build OpenJDK Mobile for ios sim
+
+on:
+  workflow_dispatch: # manual trigger
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: 'Install toolchain and dependencies'
+        run: |
+          # Run Homebrew installation and xcode-select
+          brew install libffi
+          brew install autoconf make
+          sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+          # This will make GNU make available as 'make' and not only as 'gmake' 
+          echo '/usr/local/opt/make/libexec/gnubin' >> $GITHUB_PATH
+
+      - name: Checkout builder repo
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 24
+        uses: actions/setup-java@v4
+        with:
+          java-version: '24'
+          distribution: 'temurin'
+
+      - name: Download and unzip mobile-support
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download libffi-build --pattern "libffi-ios-sim.zip"
+          mkdir -p ../support
+          unzip libffi-ios-sim.zip -d ../support
+          echo "unzip done"
+          ls -l ..
+          ls -l ../support
+          pwd
+          echo "$(realpath ../support)"
+
+      - name: Clone OpenJDK Mobile sources
+        run: |
+          git clone https://github.com/openjdk/mobile.git
+          cd mobile
+          # optionally checkout a specific branch or tag
+          git checkout master
+          pwd
+          ls -l .
+          ls -l ..
+          ls -l ../../support
+          bash configure \
+          --with-conf-name=iossim-aarch64-zero-release \
+          --disable-warnings-as-errors \
+          --openjdk-target=aarch64-macos-ios \
+          --with-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk \
+          --with-libffi-include=$(realpath ../../support/include/ffi) \
+          --with-libffi-lib=$(realpath ../../support) \
+          --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
+          make LOG=cmdlines,info CONF=iossim-aarch64-zero-release static-libs-image

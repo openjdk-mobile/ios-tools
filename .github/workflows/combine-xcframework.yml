@@ -1,0 +1,57 @@
+name: Combine XCFramework
+
+on:
+  repository_dispatch:
+    types: [combine-xcframework]
+
+jobs:
+  combine:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for both artifacts
+        run: |
+          echo "Checking for both device and simulator artifacts..."
+          attempts=0
+          max_attempts=20
+          while true; do
+            device=$(gh run list --workflow="Build OpenJDK iOS Device" --limit 5 --json artifacts | jq '.[] | .artifacts | map(.name) | index("libjvm-device")')
+            simulator=$(gh run list --workflow="Build OpenJDK iOS Simulator" --limit 5 --json artifacts | jq '.[] | .artifacts | map(.name) | index("libjvm-simulator")')
+            if [ "$device" != "null" ] && [ "$simulator" != "null" ]; then
+              echo "Both artifacts are available."
+              break
+            fi
+            attempts=$((attempts+1))
+            if [ "$attempts" -ge "$max_attempts" ]; then
+              echo "Artifacts not ready after waiting. Exiting."
+              exit 1
+            fi
+            echo "Artifacts not ready yet. Sleeping 30s..."
+            sleep 30
+          done
+
+      - name: Download device artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: libjvm-device
+          path: ./device
+
+      - name: Download simulator artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: libjvm-simulator
+          path: ./simulator
+
+      - name: Create XCFramework
+        run: |
+          xcodebuild -create-xcframework \
+            -library ./device/libjvm.a -headers ./device/include \
+            -library ./simulator/libjvm.a -headers ./simulator/include \
+            -output ./OpenJDK.xcframework
+
+      - name: Upload XCFramework
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenJDK-XCFramework
+          path: ./OpenJDK.xcframework

@@ -62,5 +62,7 @@ jobs:
           --with-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk \
           --with-libffi-include=$(realpath ../../support/include/ffi) \
           --with-libffi-lib=$(realpath ../../support) \
+          --with-extra-cflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
+          --with-extra-cxxflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
           --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
           make LOG=cmdlines,info CONF=iossim-aarch64-zero-release static-libs-image

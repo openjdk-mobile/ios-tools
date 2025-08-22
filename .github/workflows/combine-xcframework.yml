@@ -1,3 +1,4 @@
+# .github/workflows/combine-xcframework.yml
 name: Combine XCFramework
 
 on:
@@ -8,7 +9,8 @@ jobs:
   combine:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Wait for both artifacts
         run: |
@@ -43,7 +45,7 @@ jobs:
           name: libjvm-simulator
           path: ./simulator
 
-       - name: Prepare headers
+      - name: Prepare headers
         run: |
           mkdir -p device/jdk
           cp -R device/mobile/build/ios-aarch64-zero-release/jdk/include device/jdk/
@@ -65,3 +67,4 @@ jobs:
         with:
           name: OpenJDK-XCFramework
           path: ./OpenJDK.xcframework
+

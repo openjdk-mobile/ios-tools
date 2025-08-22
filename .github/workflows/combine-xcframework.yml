@@ -43,11 +43,21 @@ jobs:
           name: libjvm-simulator
           path: ./simulator
 
+       - name: Prepare headers
+        run: |
+          mkdir -p device/jdk
+          cp -R device/mobile/build/ios-aarch64-zero-release/jdk/include device/jdk/
+          
+          mkdir -p simulator/jdk
+          cp -R simulator/mobile/build/ios-simulator-release/jdk/include simulator/jdk/
+
       - name: Create XCFramework
         run: |
           xcodebuild -create-xcframework \
-            -library ./device/libjvm.a -headers ./device/include \
-            -library ./simulator/libjvm.a -headers ./simulator/include \
+            -library ./device/mobile/build/ios-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a \
+            -headers ./device/jdk/include \
+            -library ./simulator/mobile/build/ios-simulator-release/images/static-libs/lib/zero/libjvm.a \
+            -headers ./simulator/jdk/include \
             -output ./OpenJDK.xcframework
 
       - name: Upload XCFramework

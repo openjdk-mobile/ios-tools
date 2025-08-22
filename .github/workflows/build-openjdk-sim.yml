@@ -66,3 +66,18 @@ jobs:
           --with-extra-cxxflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
           --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
           make LOG=cmdlines,info CONF=iossim-aarch64-zero-release static-libs-image
+
+      - name: Upload device artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libjvm-simulator
+          path: |
+            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a
+            mobile/build/iossim-aarch64-zero-release/jdk/include
+
+      - name: Trigger XCFramework combiner
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: combine-xcframework
+

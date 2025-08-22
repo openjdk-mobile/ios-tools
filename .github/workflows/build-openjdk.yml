@@ -64,3 +64,31 @@ jobs:
           --with-libffi-lib=$(realpath ../../support) \
           --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
           make LOG=cmdlines,info CONF=ios-aarch64-zero-release static-libs-image
+
+      - name: List current directory
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+
+      - name: List mobile directory
+        run: |
+          if [ -d "mobile" ]; then
+            echo "'mobile' directory exists, listing contents:"
+            ls -la mobile
+          else
+            echo "'mobile' directory does not exist!"
+          fi
+
+      - name: Upload device artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libjvm-device
+          path: |
+            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a
+            mobile/build/ios-aarch64-zero-release/jdk/include
+
+      - name: Trigger XCFramework combiner
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: combine-xcframework

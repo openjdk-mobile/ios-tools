@@ -20,6 +20,7 @@ jobs:
           attempts=0
           max_attempts=20
           while true; do
+            echo "try to get device artifact"
             device=$(gh run list --workflow="Build OpenJDK iOS Device" --limit 5 --json artifacts | jq '.[] | .artifacts | map(.name) | index("libjvm-device")')
             simulator=$(gh run list --workflow="Build OpenJDK iOS Simulator" --limit 5 --json artifacts | jq '.[] | .artifacts | map(.name) | index("libjvm-simulator")')
             if [ "$device" != "null" ] && [ "$simulator" != "null" ]; then

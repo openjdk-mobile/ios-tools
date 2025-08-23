@@ -31,6 +31,12 @@ jobs:
 
       - name: Prepare headers
         run: |
+          ls device
+          ls device/mobile
+          ls device/mobile/build
+          ls device/mobile/build/ios-aarch64-zero-release
+          ls device/mobile/build/ios-aarch64-zero-release/jdk
+          ls device/mobile/build/ios-aarch64-zero-release/jdk/include
           mkdir -p device/jdk
           cp -R device/mobile/build/ios-aarch64-zero-release/jdk/include device/jdk/
           

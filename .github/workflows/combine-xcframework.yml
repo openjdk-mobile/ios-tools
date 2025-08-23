@@ -31,19 +31,18 @@ jobs:
 
       - name: Prepare headers
         run: |
-          ls -d **/*
           mkdir -p device/jdk
-          cp -R device/mobile/build/ios-aarch64-zero-release/jdk/include device/jdk/
+          cp -R device/jdk/include device/jdk/
           
           mkdir -p simulator/jdk
-          cp -R simulator/mobile/build/ios-simulator-release/jdk/include simulator/jdk/
+          cp -R simulator/jdk/include simulator/jdk/
 
       - name: Create XCFramework
         run: |
           xcodebuild -create-xcframework \
-            -library ./device/mobile/build/ios-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a \
+            -library ./device/images/static-libs/lib/zero/libjvm.a \
             -headers ./device/jdk/include \
-            -library ./simulator/mobile/build/ios-simulator-release/images/static-libs/lib/zero/libjvm.a \
+            -library ./simulator/images/static-libs/lib/zero/libjvm.a \
             -headers ./simulator/jdk/include \
             -output ./OpenJDK.xcframework
 

@@ -32,6 +32,8 @@ jobs:
       - name: Prepare headers
         run: |
           ls device
+          ls device/jdk
+          ls device/images
           ls device/mobile
           ls device/mobile/build
           ls device/mobile/build/ios-aarch64-zero-release

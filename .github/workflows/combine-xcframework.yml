@@ -29,14 +29,6 @@ jobs:
           name: libjvm-simulator
           path: ./simulator
 
-      - name: Prepare headers
-        run: |
-          mkdir -p device/jdk
-          cp -R device/jdk/include device/jdk/
-          
-          mkdir -p simulator/jdk
-          cp -R simulator/jdk/include simulator/jdk/
-
       - name: Create XCFramework
         run: |
           xcodebuild -create-xcframework \

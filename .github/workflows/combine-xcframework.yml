@@ -7,11 +7,11 @@ jobs:
   build-openjdk:
     uses: ./.github/workflows/build-openjdk.yml
 
-  build-openjdk-ios:
-    uses: ./.github/workflows/build-openjdk-ios.yml
+  build-openjdk-sim:
+    uses: ./.github/workflows/build-openjdk-sim.yml
 
   combine:
-    needs: [ build-openjdk, build-openjdk-ios ]
+    needs: [ build-openjdk, build-openjdk-sim ]
     runs-on: macos-latest
     steps:
       - name: Checkout repository

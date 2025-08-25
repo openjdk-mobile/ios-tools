@@ -43,9 +43,7 @@ jobs:
           cp ./libffi-ios/libffi.a device-static
           cp ./device/images/static-libs/lib/zero/libjvm.a device-static
           cd device-static
-          ar x libjvm.a
-          ar x libffi.a
-          ar rcs libdevice.a *.o
+          libtool -i libdevice.a libffi.a libjvm.a
 
       - name: Create simulator static
         run: |
@@ -53,9 +51,7 @@ jobs:
           cp ./libffi-ios-sim/libffi.a sim-static
           cp ./simulator/images/static-libs/lib/zero/libjvm.a sim-static
           cd sim-static
-          ar x libjvm.a
-          ar x libffi.a
-          ar rcs libsim.a *.o
+          libtool -i libsim.a libffi.a libjvm.a
 
       - name: Create XCFramework
         run: |

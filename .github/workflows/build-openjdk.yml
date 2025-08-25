@@ -80,9 +80,3 @@ jobs:
           path: |
             mobile/build/ios-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a
             mobile/build/ios-aarch64-zero-release/jdk/include
-
-      - name: Trigger XCFramework combiner
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          event-type: combine-xcframework

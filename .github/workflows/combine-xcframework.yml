@@ -1,6 +1,8 @@
 name: Combine XCFramework
 
 on:
+  schedule:
+    - cron: '0 3 * * *' # run at 3 AM UTC
   workflow_dispatch:
 
 jobs:
@@ -37,6 +39,8 @@ jobs:
             -library ./simulator/images/static-libs/lib/zero/libjvm.a \
             -headers ./simulator/jdk/include \
             -output ./OpenJDK.xcframework
+          cd OpenJDK.xcframework
+          zip -r ../OpenJDK-XCFramework.zip .
 
       - name: Upload XCFramework
         uses: actions/upload-artifact@v4
@@ -44,3 +48,11 @@ jobs:
           name: OpenJDK-XCFramework
           path: ./OpenJDK.xcframework
 
+      - name: Upload artifacts
+        if: ${{ github.event_name == 'schedule' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Nightly build"
+          draft: true
+          files: |
+            OpenJDK-XCFramework.zip

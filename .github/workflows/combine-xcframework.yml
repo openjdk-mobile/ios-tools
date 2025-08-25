@@ -17,6 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Download and unzip mobile-support
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download libffi-build -p "libffi-ios.zip" -p "libffi-ios-sim.zip"
+          unzip libffi-ios.zip -d libffi-ios
+          unzip libffi-ios-sim.zip -d libffi-ios-sim
+
       - name: Download device artifact
         uses: actions/download-artifact@v4
         with:
@@ -29,12 +37,28 @@ jobs:
           name: libjvm-simulator
           path: ./simulator
 
+      - name: Create device static
+        run: |
+          mkdir device-static
+          cp ./libffi-ios/libffi.a device-static
+          cp ./device/images/static-libs/lib/zero/libjvm.a device-static
+          cd device-static
+          libtool -static -o libdevice.a libffi.a libjvm.a
+
+      - name: Create simulator static
+        run: |
+          mkdir sim-static
+          cp ./libffi-ios-sim/libffi.a sim-static
+          cp ./simulator/images/static-libs/lib/zero/libjvm.a sim-static
+          cd sim-static
+          libtool -static -o libsim.a libffi.a libjvm.a
+
       - name: Create XCFramework
         run: |
           xcodebuild -create-xcframework \
-            -library ./device/images/static-libs/lib/zero/libjvm.a \
+            -library ./device-static/libdevice.a \
             -headers ./device/jdk/include \
-            -library ./simulator/images/static-libs/lib/zero/libjvm.a \
+            -library ./sim-static/libsim.a \
             -headers ./simulator/jdk/include \
             -output ./OpenJDK.xcframework
 
@@ -43,4 +67,3 @@ jobs:
         with:
           name: OpenJDK-XCFramework
           path: ./OpenJDK.xcframework
-

@@ -50,7 +50,7 @@ jobs:
       - name: Create simulator static
         run: |
           mkdir sim-static
-          cp ./libffi-ios/libffi.a sim-static
+          cp ./libffi-ios-sim/libffi.a sim-static
           cp ./simulator/images/static-libs/lib/zero/libjvm.a sim-static
           cd sim-static
           ar x libjvm.a

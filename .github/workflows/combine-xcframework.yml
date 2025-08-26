@@ -55,6 +55,11 @@ jobs:
           cd sim-static
           libtool -static -o libsim.a libffi.a libjvm.a
 
+      - name: Flatten header location
+        run: |
+          cp ./device/jdk/include/ios/* ./device/jdk/include/
+          cp ./simulator/jdk/include/ios/* ./simulator/jdk/include/
+
       - name: Create XCFramework
         run: |
           xcodebuild -create-xcframework \
@@ -64,12 +69,12 @@ jobs:
             -headers ./simulator/jdk/include \
             -output ./OpenJDK.xcframework
           cd OpenJDK.xcframework
-          zip -r ../OpenJDK-XCFramework.zip .
+          zip -r ../OpenJDK.xcframework.zip .
 
       - name: Upload XCFramework
         uses: actions/upload-artifact@v4
         with:
-          name: OpenJDK-XCFramework
+          name: OpenJDK.xcframework
           path: ./OpenJDK.xcframework
 
       - name: Upload artifacts
@@ -79,4 +84,4 @@ jobs:
           name: "Nightly build"
           draft: true
           files: |
-            OpenJDK-XCFramework.zip
+            OpenJDK.xcframework.zip

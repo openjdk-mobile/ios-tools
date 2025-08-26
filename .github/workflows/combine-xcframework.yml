@@ -44,7 +44,8 @@ jobs:
           mkdir device-static
           ls -R ./device/images/static-libs/lib/
           cp ./libffi-ios/libffi.a device-static
-          cp ./device/images/static-libs/lib/**/*.a device-static
+          cp ./device/images/static-libs/lib/*.a device-static
+          cp ./device/images/static-libs/lib/zero/libjvm.a device-static
           cd device-static
           ls
           libtool -static -o libdevice.a *.a
@@ -54,7 +55,8 @@ jobs:
           mkdir sim-static
           ls -R ./simulator/images/static-libs/lib/
           cp ./libffi-ios-sim/libffi.a sim-static
-          cp ./simulator/images/static-libs/lib/**/*.a sim-static
+          cp ./simulator/images/static-libs/lib/*.a sim-static
+          cp ./simulator/images/static-libs/lib/zero/libjvm.a sim-static
           cd sim-static
           ls
           libtool -static -o libsim.a *.a

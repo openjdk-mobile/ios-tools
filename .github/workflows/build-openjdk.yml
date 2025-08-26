@@ -79,4 +79,8 @@ jobs:
           name: libjvm-device
           path: |
             mobile/build/ios-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a
+            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libjava.a
+            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libjimage.a
+            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libnio.a
+            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libzip.a
             mobile/build/ios-aarch64-zero-release/jdk/include

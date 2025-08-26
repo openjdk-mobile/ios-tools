@@ -55,6 +55,11 @@ jobs:
           cd sim-static
           libtool -static -o libsim.a libffi.a libjvm.a
 
+      - name: Flatten header location
+        run: |
+          cp ./device/jdk/include/ios/* ./device/jdk/include/
+          cp ./simulator/jdk/include/ios/* ./simulator/jdk/include/
+
       - name: Create XCFramework
         run: |
           xcodebuild -create-xcframework \

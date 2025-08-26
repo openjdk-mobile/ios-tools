@@ -45,6 +45,7 @@ jobs:
           cp ./libffi-ios/libffi.a device-static
           cp ./device/images/static-libs/lib/**/*.a device-static
           cd device-static
+          ls
           libtool -static -o libdevice.a *.a
 
       - name: Create simulator static
@@ -53,6 +54,7 @@ jobs:
           cp ./libffi-ios-sim/libffi.a sim-static
           cp ./simulator/images/static-libs/lib/**/*.a sim-static
           cd sim-static
+          ls
           libtool -static -o libsim.a *.a
 
       - name: Flatten header location

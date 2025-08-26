@@ -43,11 +43,7 @@ jobs:
         run: |
           mkdir device-static
           cp ./libffi-ios/libffi.a device-static
-          cp ./device/images/static-libs/lib/zero/libjvm.a device-static
-          cp ./device/images/static-libs/lib/libjava.a device-static
-          cp ./device/images/static-libs/lib/libjimage.a device-static
-          cp ./device/images/static-libs/lib/libnio.a device-static
-          cp ./device/images/static-libs/lib/libzip.a device-static
+          cp ./device/images/static-libs/lib/**/*.a device-static
           cd device-static
           libtool -static -o libdevice.a *.a
 
@@ -55,11 +51,7 @@ jobs:
         run: |
           mkdir sim-static
           cp ./libffi-ios-sim/libffi.a sim-static
-          cp ./simulator/images/static-libs/lib/zero/libjvm.a sim-static
-          cp ./simulator/images/static-libs/lib/libjava.a sim-static
-          cp ./simulator/images/static-libs/lib/libjimage.a sim-static
-          cp ./simulator/images/static-libs/lib/libnio.a sim-static
-          cp ./simulator/images/static-libs/lib/libzip.a sim-static
+          cp ./simulator/images/static-libs/lib/**/*.a sim-static
           cd sim-static
           libtool -static -o libsim.a *.a
 

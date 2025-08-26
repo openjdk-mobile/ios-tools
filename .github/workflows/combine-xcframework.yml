@@ -84,6 +84,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: "Nightly build"
+          tag_name: nightly
           prerelease: true
           files: |
             OpenJDK.xcframework.zip

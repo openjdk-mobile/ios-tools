@@ -80,7 +80,7 @@ jobs:
           path: ./OpenJDK.xcframework
 
       - name: Upload artifacts
-#        if: ${{ github.event_name == 'schedule' }}
+##        if: ${{ github.event_name == 'schedule' }}
         uses: softprops/action-gh-release@v2
         with:
           name: "Nightly build"

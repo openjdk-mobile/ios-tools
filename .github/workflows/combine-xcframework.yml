@@ -76,10 +76,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: OpenJDK.xcframework
-          path: ./OpenJDK.xcframework.zip
+          path: ./OpenJDK.xcframework
 
       - name: Create nightly release
-        if: ${{ github.event_name == 'schedule' }}
+#        if: ${{ github.event_name == 'schedule' }}
         uses: softprops/action-gh-release@v2
         with:
           name: "Nightly build"

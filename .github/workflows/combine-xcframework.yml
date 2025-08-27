@@ -19,14 +19,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download and unzip mobile-support
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release download libffi-build -p "libffi-ios.zip" -p "libffi-ios-sim.zip"
-          unzip libffi-ios.zip -d libffi-ios
-          unzip libffi-ios-sim.zip -d libffi-ios-sim
-
       - name: Download device artifact
         uses: actions/download-artifact@v4
         with:
@@ -39,38 +31,18 @@ jobs:
           name: libjvm-simulator
           path: ./simulator
 
-      - name: Create device static
+      - name: Download and unzip mobile-support
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir device-static
-          cp ./libffi-ios/libffi.a device-static
-          cp ./device/images/static-libs/lib/*.a device-static
-          cp ./device/images/static-libs/lib/zero/libjvm.a device-static
-          cd device-static
-          libtool -static -o libdevice.a *.a
-
-      - name: Create simulator static
-        run: |
-          mkdir sim-static
-          cp ./libffi-ios-sim/libffi.a sim-static
-          cp ./simulator/images/static-libs/lib/*.a sim-static
-          cp ./simulator/images/static-libs/lib/zero/libjvm.a sim-static
-          cd sim-static
-          libtool -static -o libsim.a *.a
-
-      - name: Flatten header location
-        run: |
-          cp ./device/jdk/include/ios/* ./device/jdk/include/
-          cp ./simulator/jdk/include/ios/* ./simulator/jdk/include/
+          gh release download libffi-build -p "libffi-ios.zip" -p "libffi-ios-sim.zip"
+          unzip libffi-ios.zip -d libffi-ios
+          unzip libffi-ios-sim.zip -d libffi-ios-sim
 
       - name: Create XCFramework
         run: |
-          xcodebuild -create-xcframework \
-            -library ./device-static/libdevice.a \
-            -headers ./device/jdk/include \
-            -library ./sim-static/libsim.a \
-            -headers ./simulator/jdk/include \
-            -output ./OpenJDK.xcframework
-          zip -r OpenJDK.xcframework.zip OpenJDK.xcframework
+          chmod +x .github/scripts/build-xcframework.sh
+          .github/scripts/build-xcframework.sh
 
       - name: Upload XCFramework
         uses: actions/upload-artifact@v4

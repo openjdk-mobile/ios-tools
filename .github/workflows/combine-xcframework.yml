@@ -70,8 +70,7 @@ jobs:
             -library ./sim-static/libsim.a \
             -headers ./simulator/jdk/include \
             -output ./OpenJDK.xcframework
-          cd OpenJDK.xcframework
-          zip -r ../OpenJDK.xcframework.zip .
+          zip -r OpenJDK.xcframework.zip OpenJDK.xcframework
 
       - name: Upload XCFramework
         uses: actions/upload-artifact@v4

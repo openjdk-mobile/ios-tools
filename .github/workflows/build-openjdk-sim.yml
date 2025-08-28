@@ -70,6 +70,7 @@ jobs:
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libjava.a
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libjimage.a
+            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libnet.a
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libnio.a
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libzip.a
             mobile/build/iossim-aarch64-zero-release/jdk/include

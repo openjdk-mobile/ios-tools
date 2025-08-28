@@ -15,7 +15,7 @@ cp $LIBFFI/libffi.a $DEVICE_TARGET
 cp $DEVICE_SRC/images/static-libs/lib/*.a $DEVICE_TARGET
 cp $DEVICE_SRC/images/static-libs/lib/zero/libjvm.a $DEVICE_TARGET
 cd $DEVICE_TARGET
-libtool -static -o libdevice.a *.a
+libtool -static -o libdevice.a libjvm.a libffi.a libjava.a libzip.a libnet.a libnio.a
 cd ..
 
 # Create sim static
@@ -24,7 +24,7 @@ cp $LIBFFI_SIM/libffi.a $SIMULATOR_TARGET
 cp $SIMULATOR_SRC/images/static-libs/lib/*.a $SIMULATOR_TARGET
 cp $SIMULATOR_SRC/images/static-libs/lib/zero/libjvm.a $SIMULATOR_TARGET
 cd $SIMULATOR_TARGET
-libtool -static -o libsim.a *.a
+libtool -static -o libdevice.a libjvm.a libffi.a libjava.a libzip.a libnet.a libnio.a
 cd ..
 
 # Flatten header location

@@ -78,7 +78,7 @@ jobs:
           name: OpenJDK.xcframework
           path: ./OpenJDK.xcframework
 
-      - name: Create nightly release
+      - name: Create snapshot release
         uses: softprops/action-gh-release@v2
         with:
           name: "Snapshot release"

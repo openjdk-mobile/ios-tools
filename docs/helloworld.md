@@ -119,7 +119,7 @@ From https://github.com/openjdk-mobile/ios-tools/releases/tag/snapshot download 
 
 This will result in a directory named `OpenJDK.xcframework`, which is the framework that will be included in Xcode and directory `java.base` that will be needed in one of the next steps.
 
-You can skip the build section and now proceed with `Add framework`.
+You can skip the build section and now proceed with [Add framework](#add-framework).
 
 ### Build
 

@@ -79,11 +79,10 @@ jobs:
           path: ./OpenJDK.xcframework
 
       - name: Create nightly release
-        if: ${{ github.event_name == 'schedule' }}
         uses: softprops/action-gh-release@v2
         with:
-          name: "Nightly build"
-          tag_name: nightly
+          name: "Snapshot release"
+          tag_name: snapshot
           prerelease: true
           files: |
             OpenJDK.xcframework.zip

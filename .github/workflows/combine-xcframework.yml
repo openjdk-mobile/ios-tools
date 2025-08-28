@@ -19,6 +19,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Download java.base for device
+        uses: actions/download-artifact@v4
+        with:
+          name: java.base-device
+          path: ./java.base-device
+
+      - name: Download java.base for simulator
+        uses: actions/download-artifact@v4
+        with:
+          name: java.base-simulator
+          path: ./java.base-simulator
+
       - name: Download and unzip mobile-support
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -71,8 +83,10 @@ jobs:
             -headers ./simulator/jdk/include \
             -output ./OpenJDK.xcframework
           zip -r OpenJDK.xcframework.zip OpenJDK.xcframework
+          zip -r java.base-device.zip java.base-device
+          zip -r java.base-simulator.zip java.base-simulator
 
-      - name: Upload XCFramework
+      - name: Upload XCFramework and java.base module
         uses: actions/upload-artifact@v4
         with:
           name: OpenJDK.xcframework
@@ -86,3 +100,5 @@ jobs:
           prerelease: true
           files: |
             OpenJDK.xcframework.zip
+            java.base-device.zip
+            java.base-simulator.zip

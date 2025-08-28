@@ -153,6 +153,11 @@ _(replace /path/to/suport/libffi to the path of the downloaded or built ffi from
 make CONF=ios-aarch64-zero-release static-libs-image 
 ```
 
+### Create the framework
+
+Follow the instructions [here](https://github.com/openjdk-mobile/ios-tools/blob/main/docs/ga/openjdk.md) to create the Xcode framework.
+
+
 ## Add framework
 
 Right click the the HelloMobileApp group ([top level](images/helloworld02-toplevel.png)).

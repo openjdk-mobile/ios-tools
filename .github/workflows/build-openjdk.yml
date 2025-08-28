@@ -86,3 +86,10 @@ jobs:
             mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libnio.a
             mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libzip.a
             mobile/build/ios-aarch64-zero-release/jdk/include
+
+      - name: Upload java.base
+        uses: actions/upload-artifact@v4
+        with:
+          name: java.base
+          path: |
+            mobile/build/ios-aarch64-zero-release/jdk/modules/java.base

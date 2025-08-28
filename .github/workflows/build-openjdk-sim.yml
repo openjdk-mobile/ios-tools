@@ -75,3 +75,9 @@ jobs:
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libzip.a
             mobile/build/iossim-aarch64-zero-release/jdk/include
 
+      - name: Upload java.base
+        uses: actions/upload-artifact@v4
+        with:
+          name: java.base
+          path: |
+            mobile/build/iossim-aarch64-zero-release/jdk/modules/java.base

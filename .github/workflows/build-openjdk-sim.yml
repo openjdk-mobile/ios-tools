@@ -78,6 +78,6 @@ jobs:
       - name: Upload java.base
         uses: actions/upload-artifact@v4
         with:
-          name: java.base
+          name: java.base-simulator
           path: |
             mobile/build/iossim-aarch64-zero-release/jdk/modules/java.base

@@ -42,7 +42,7 @@ jobs:
       - name: Clone OpenJDK Mobile sources
         run: |
           git clone https://github.com/openjdk/mobile.git
-          cp openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
+          cp openjdk-ext/src/hotspot/symbol_keeper.cpp mobile/src/hotspot/os/bsd
           cd mobile
           # optionally checkout a specific branch or tag
           git checkout master

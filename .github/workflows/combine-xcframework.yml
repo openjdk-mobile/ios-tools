@@ -51,37 +51,13 @@ jobs:
           name: libjvm-simulator
           path: ./simulator
 
-      - name: Create device static
-        run: |
-          mkdir device-static
-          cp ./libffi-ios/libffi.a device-static
-          cp ./device/images/static-libs/lib/*.a device-static
-          cp ./device/images/static-libs/lib/zero/libjvm.a device-static
-          cd device-static
-          libtool -static -o libdevice.a *.a
-
-      - name: Create simulator static
-        run: |
-          mkdir sim-static
-          cp ./libffi-ios-sim/libffi.a sim-static
-          cp ./simulator/images/static-libs/lib/*.a sim-static
-          cp ./simulator/images/static-libs/lib/zero/libjvm.a sim-static
-          cd sim-static
-          libtool -static -o libsim.a *.a
-
-      - name: Flatten header location
-        run: |
-          cp ./device/jdk/include/ios/* ./device/jdk/include/
-          cp ./simulator/jdk/include/ios/* ./simulator/jdk/include/
-
       - name: Create XCFramework
         run: |
-          xcodebuild -create-xcframework \
-            -library ./device-static/libdevice.a \
-            -headers ./device/jdk/include \
-            -library ./sim-static/libsim.a \
-            -headers ./simulator/jdk/include \
-            -output ./OpenJDK.xcframework
+          chmod +x .github/scripts/build-xcframework.sh
+          .github/scripts/build-xcframework.sh
+
+      - name: Compress XCFramework and java.base module
+        run: |
           zip -r OpenJDK.xcframework.zip OpenJDK.xcframework
           cd java.base-device
           zip -r ../java.base-device.zip java.base

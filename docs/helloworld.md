@@ -153,7 +153,7 @@ make CONF=ios-aarch64-zero-release static-libs-image
 
 ### Create the framework
 
-Follow the instructions [here](https://github.com/openjdk-mobile/ios-tools/blob/main/docs/ga/openjdk.md) to create the Xcode framework.
+Follow the instructions [here](https://github.com/openjdk-mobile/ios-tools/blob/main/docs/ga/xcframework.md) to create the Xcode framework.
 
 
 ## Add framework

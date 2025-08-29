@@ -83,8 +83,10 @@ jobs:
             -headers ./simulator/jdk/include \
             -output ./OpenJDK.xcframework
           zip -r OpenJDK.xcframework.zip OpenJDK.xcframework
-          zip -r java.base-device.zip java.base-device/java.base
-          zip -r java.base-simulator.zip java.base-simulator/java.base
+          cd java.base-device
+          zip -r ../java.base-device.zip java.base
+          cd ../java.base-simulator
+          zip -r ../java.base-simulator.zip java.base
 
       - name: Upload XCFramework and java.base module
         uses: actions/upload-artifact@v4

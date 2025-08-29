@@ -8,4 +8,6 @@ The combine workflow:
 - creates a static library
 - and then uses xcodebuild to combine the libaries and headers into a framework
 
+Most of the work is delegated to a script, allowing non-CI usage. Developers can just change the constants in the script and run it on their local setup.
+
 The framework itself and the corresponding build of the java.base module are uploaded as a [release artifact](https://github.com/openjdk-mobile/ios-tools/releases/tag/snapshot).

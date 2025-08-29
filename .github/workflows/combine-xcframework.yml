@@ -51,29 +51,6 @@ jobs:
           name: libjvm-simulator
           path: ./simulator
 
-      - name: Create device static
-        run: |
-          mkdir device-static
-          cp ./libffi-ios/libffi.a device-static
-          cp ./device/images/static-libs/lib/*.a device-static
-          cp ./device/images/static-libs/lib/zero/libjvm.a device-static
-          cd device-static
-          libtool -static -o libdevice.a *.a
-
-      - name: Create simulator static
-        run: |
-          mkdir sim-static
-          cp ./libffi-ios-sim/libffi.a sim-static
-          cp ./simulator/images/static-libs/lib/*.a sim-static
-          cp ./simulator/images/static-libs/lib/zero/libjvm.a sim-static
-          cd sim-static
-          libtool -static -o libsim.a *.a
-
-      - name: Flatten header location
-        run: |
-          cp ./device/jdk/include/ios/* ./device/jdk/include/
-          cp ./simulator/jdk/include/ios/* ./simulator/jdk/include/
-
       - name: Create XCFramework
         run: |
           chmod +x .github/scripts/build-xcframework.sh

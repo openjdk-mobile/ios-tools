@@ -183,7 +183,7 @@ In the end it will look like [this](images/helloworld07-javabase.png).
 
 This is needed because libzip.a, created from OpenJDK has unresolved symbols that are implemented by libz.
 
-Go to HelloMobileApp in the left navigation, select target HelloMobileApp and open tab Build Phases and expand [Link binary with Libraries](images/helloworld08-libz).
+Go to HelloMobileApp in the left navigation, select target HelloMobileApp and open tab Build Phases and expand [Link binary with Libraries](images/helloworld08-libz.png).
 
 Press `+` and search for `libz.tbd` and add it.
 

@@ -111,8 +111,6 @@ At the end of this step, you’ll have an xcode framework and the java.base modu
 
 ### Download
 
-Download the [framework](https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/OpenJDK.xcframework.zip) 
-
 From https://github.com/openjdk-mobile/ios-tools/releases/tag/snapshot download and unpack:
 - the [framework](https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/OpenJDK.xcframework.zip)
 - the [java.base module](https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/java.base-device.zip)

@@ -19,6 +19,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Download java.base for device
+        uses: actions/download-artifact@v4
+        with:
+          name: java.base-device
+          path: ./java.base-device
+
+      - name: Download java.base for simulator
+        uses: actions/download-artifact@v4
+        with:
+          name: java.base-simulator
+          path: ./java.base-simulator
+
+      - name: Download and unzip mobile-support
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download libffi-build -p "libffi-ios.zip" -p "libffi-ios-sim.zip"
+          unzip libffi-ios.zip -d libffi-ios
+          unzip libffi-ios-sim.zip -d libffi-ios-sim
+
       - name: Download device artifact
         uses: actions/download-artifact@v4
         with:
@@ -31,31 +51,53 @@ jobs:
           name: libjvm-simulator
           path: ./simulator
 
-      - name: Download and unzip mobile-support
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create device static
         run: |
-          gh release download libffi-build -p "libffi-ios.zip" -p "libffi-ios-sim.zip"
-          unzip libffi-ios.zip -d libffi-ios
-          unzip libffi-ios-sim.zip -d libffi-ios-sim
+          mkdir device-static
+          cp ./libffi-ios/libffi.a device-static
+          cp ./device/images/static-libs/lib/*.a device-static
+          cp ./device/images/static-libs/lib/zero/libjvm.a device-static
+          cd device-static
+          libtool -static -o libdevice.a *.a
+
+      - name: Create simulator static
+        run: |
+          mkdir sim-static
+          cp ./libffi-ios-sim/libffi.a sim-static
+          cp ./simulator/images/static-libs/lib/*.a sim-static
+          cp ./simulator/images/static-libs/lib/zero/libjvm.a sim-static
+          cd sim-static
+          libtool -static -o libsim.a *.a
+
+      - name: Flatten header location
+        run: |
+          cp ./device/jdk/include/ios/* ./device/jdk/include/
+          cp ./simulator/jdk/include/ios/* ./simulator/jdk/include/
 
       - name: Create XCFramework
         run: |
           chmod +x .github/scripts/build-xcframework.sh
           .github/scripts/build-xcframework.sh
 
-      - name: Upload XCFramework
+      - name: Compress XCFramework and java.base module
+        run: |
+          zip -r OpenJDK.xcframework.zip OpenJDK.xcframework
+          zip -r java.base-device.zip java.base-device
+          zip -r java.base-simulator.zip java.base-simulator
+
+      - name: Upload XCFramework and java.base module
         uses: actions/upload-artifact@v4
         with:
           name: OpenJDK.xcframework
           path: ./OpenJDK.xcframework
 
-      - name: Create nightly release
-        if: ${{ github.event_name == 'schedule' }}
+      - name: Create snapshot release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Nightly build"
-          tag_name: nightly
+          name: "Snapshot release"
+          tag_name: snapshot
           prerelease: true
           files: |
             OpenJDK.xcframework.zip
+            java.base-device.zip
+            java.base-simulator.zip

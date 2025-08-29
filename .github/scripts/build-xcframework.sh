@@ -38,4 +38,3 @@ xcodebuild -create-xcframework \
   -library $SIMULATOR_TARGET/libsim.a \
   -headers $SIMULATOR_SRC/jdk/include \
   -output ./OpenJDK.xcframework
-zip -r OpenJDK.xcframework.zip OpenJDK.xcframework

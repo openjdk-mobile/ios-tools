@@ -42,6 +42,7 @@ jobs:
       - name: Clone OpenJDK Mobile sources
         run: |
           git clone https://github.com/openjdk/mobile.git
+          cp openjdk-ext/src/hotspot/symbol_keeper.cpp mobile/src/hotspot/os/bsd
           cd mobile
           # optionally checkout a specific branch or tag
           git checkout master
@@ -69,7 +70,14 @@ jobs:
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libjava.a
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libjimage.a
+            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libnet.a
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libnio.a
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libzip.a
             mobile/build/iossim-aarch64-zero-release/jdk/include
 
+      - name: Upload java.base
+        uses: actions/upload-artifact@v4
+        with:
+          name: java.base-simulator
+          path: |
+            mobile/build/iossim-aarch64-zero-release/jdk/modules/java.base

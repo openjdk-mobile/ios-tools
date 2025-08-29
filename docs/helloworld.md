@@ -158,7 +158,7 @@ Follow the instructions [here](https://github.com/openjdk-mobile/ios-tools/blob/
 
 ## Add framework
 
-Right click the the HelloMobileApp group ([top level](images/helloworld02-toplevel.png)).
+Click the HelloMobileApp group ([top level](images/helloworld02-toplevel.png)).
 
 Select the `General` tab in the main window and scroll down to `Frameworks, libraries, and embedded content`. Then click the `+` and in the opened dialog choose Add other -> Add files. 
 

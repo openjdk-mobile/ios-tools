@@ -9,6 +9,4 @@ int Java_java_io_Console_istty() {
 // Stub for Java_sun_nio_fs_MacOSXNativeDispatcher_normalizepath
 // This is likely expected to return a String or similar, but for a
 // Hello World on ios, it is unlikely to be called.
-void* Java_sun_nio_fs_MacOSXNativeDispatcher_normalizepath() {
-    return NULL;
-}
+

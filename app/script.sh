@@ -58,5 +58,5 @@ cp -R lib HelloMobileApp/HelloMobileApp
 xcodegen generate --spec=$root/HelloMobileApp/project.xml --project=$root/HelloMobileApp
 
 cd HelloMobileApp
-xcodebuild -allowProvisioningUpdates DSTROOT=$root/Release archive
+xcodebuild CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO DSTROOT=$root/Release archive
 cd ..

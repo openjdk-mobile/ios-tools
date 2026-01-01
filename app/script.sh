@@ -58,5 +58,5 @@ cp -R lib HelloMobileApp/HelloMobileApp
 xcodegen generate --spec=$root/HelloMobileApp/project.xml --project=$root/HelloMobileApp
 
 cd HelloMobileApp
-xcodebuild DSTROOT=$root/Release archive
+xcodebuild -allowProvisioningUpdates DSTROOT=$root/Release archive
 cd ..

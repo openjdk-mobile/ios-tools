@@ -40,7 +40,7 @@ cd ..
 mkdir -p HelloMobileApp/HelloMobileApp
 cp -R ../source/*.* HelloMobileApp/HelloMobileApp
 cp ../project.xml HelloMobileApp/project.xml
-sed -i '' 's/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g' HelloMobileApp/project.xml
+sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" HelloMobileApp/project.xml
 cp helloworld/HelloWorld.jar HelloMobileApp/HelloMobileApp
 
 mkdir framework

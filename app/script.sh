@@ -59,4 +59,10 @@ xcodegen generate --spec=$root/HelloMobileApp/project.xml --project=$root/HelloM
 
 cd HelloMobileApp
 xcodebuild CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO DSTROOT=$root/Release archive
+if [[ $? != 0 ]]; then
+    echo "Xcode build failed"
+    exit -1
+fi
+cd ..
+
 cd ..

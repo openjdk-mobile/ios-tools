@@ -31,3 +31,9 @@ jobs:
         run: |
           cd app
           ./script.sh
+
+      - name: Upload iOS Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: helloMobileApp
+          path: Release/Applications

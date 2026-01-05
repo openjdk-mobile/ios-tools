@@ -2,11 +2,15 @@ name: Build HelloMobileApp
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: [ "Combine XCFramework" ]
+    types:
+      - completed
 
 jobs:
   build:
     runs-on: macos-latest
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: 'Install toolchain and dependencies'
         run: |

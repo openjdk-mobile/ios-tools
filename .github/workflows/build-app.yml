@@ -31,5 +31,3 @@ jobs:
         run: |
           cd app
           ./script.sh
-        env:
-          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}

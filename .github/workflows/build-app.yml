@@ -36,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: helloMobileApp
-          path: Release/Applications
+          path: app/build/Release/Applications

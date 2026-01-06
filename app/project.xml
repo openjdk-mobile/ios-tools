@@ -1,0 +1,33 @@
+name: HelloMobileApp
+options:
+  bundleIdPrefix: com.example.helloworld
+targets:
+  HelloMobileApp:
+    type: application
+    platform: iOS
+    dependencies:
+      - framework: HelloMobileApp/OpenJDK.xcframework
+      - sdk: libz.tbd
+    sources:
+      - path: HelloMobileApp
+        excludes: 
+          - "**/lib"
+          - "**/OpenJDK.xcframework"
+      - path: HelloMobileApp/lib
+        type: folder
+        buildPhase:
+          resources
+    info:
+      path: HelloMobileApp/Info.plist
+      properties:
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UILaunchStoryboardName: LaunchScreen
+        UIMainStoryboardFile: Main
+    settings:
+      base:
+        OTHER_LDFLAGS: -lc++
+        DEVELOPMENT_TEAM: GET_DEVELOPMENT_TEAM
+        GENERATE_INFOPLIST_FILE: Yes
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.helloworld.HelloMobileApp
+        ENABLE_DEBUG_DYLIB: No
+

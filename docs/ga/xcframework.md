@@ -6,7 +6,7 @@ The combine workflow:
 - triggers the OpenJDK mobile builds for device and simulator
 - downloads libffi
 - creates a static library
-- and then uses xcodebuild to combine the libaries and headers into a framework
+- and then uses `xcodebuild` to combine the libraries and headers into a framework
 
 Most of the work is delegated to a script, allowing non-CI usage. Developers can just change the constants in the script and run it on their local setup.
 

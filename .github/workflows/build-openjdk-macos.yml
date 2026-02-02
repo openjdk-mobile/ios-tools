@@ -33,9 +33,6 @@ jobs:
           # optionally checkout a specific branch or tag
           git checkout master
           
-          # temporary patch
-          git apply ../.github/patches/44.diff
-          
           bash configure \
             --with-conf-name=macos-aarch64 \
             --with-boot-jdk=$JAVA_HOME \

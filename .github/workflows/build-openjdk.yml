@@ -44,9 +44,6 @@ jobs:
           # optionally checkout a specific branch or tag
           git checkout master
           
-          # temporary patch
-          git apply ../.github/patches/43.diff
-          
           bash configure \
           --with-conf-name=ios-aarch64-zero-release \
           --disable-warnings-as-errors \

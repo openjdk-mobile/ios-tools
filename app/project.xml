@@ -5,7 +5,7 @@ targets:
   HelloMobileApp:
     type: application
     platform: iOS
-    deploymentTarget: "26.0"
+    deploymentTarget: "15.0"
     dependencies:
       - framework: HelloMobileApp/OpenJDK.xcframework
         embed: false

@@ -60,9 +60,6 @@ jobs:
           
           cp ../openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
           
-          # temporary patch
-          git apply ../.github/patches/ios-patch.diff
-          
           bash configure \
             --with-conf-name=ios-aarch64-zero-release \
             --with-openjfx-modules=../jfx \

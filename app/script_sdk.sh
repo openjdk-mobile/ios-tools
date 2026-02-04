@@ -77,7 +77,6 @@ fi
 if [[ ! -d "$root/mobile/build/ios-aarch64-zero-release/images/static-libs/lib" ]];  then
   echo "========== iOS SDK ==========="
   cp "$root/../../openjdk-ext/src/hotspot/symbol_keeper.cpp" "$root/mobile/src/hotspot/os/bsd"
-  git apply "$root/../../ios-patch.diff"
 
   bash configure \
       --with-conf-name=ios-aarch64-zero-release \

@@ -126,9 +126,9 @@ xcodegen generate --spec="$root/HelloFXMobileApp/project.xml" --project="$root/H
 echo "Archive project"
 cd HelloFXMobileApp || exit
 if [[ "$sign" == true ]]; then
-  xcodebuild -project HelloFXMobileApp.xcodeproj -scheme HelloFXMobileApp -archivePath $root/Release/HelloFXMobileApp.xcarchive -configuration Release -destination 'generic/platform=iOS' archive
+  xcodebuild -project HelloFXMobileApp.xcodeproj -scheme HelloFXMobileApp -archivePath "$root/Release/HelloFXMobileApp.xcarchive" -configuration Release -destination 'generic/platform=iOS' archive
 else
-  xcodebuild CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -project HelloFXMobileApp.xcodeproj -scheme HelloFXMobileApp -archivePath $root/Release/HelloFXMobileApp.xcarchive -configuration Debug -destination 'generic/platform=iOS' archive
+  xcodebuild CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -project HelloFXMobileApp.xcodeproj -scheme HelloFXMobileApp -archivePath "$root/Release/HelloFXMobileApp.xcarchive" -configuration Debug -destination 'generic/platform=iOS' archive
 fi
 if [[ $? != 0 ]]; then
     echo "Xcode build failed"

@@ -53,5 +53,5 @@ jobs:
       - name: Upload iOS IPA
         uses: actions/upload-artifact@v4
         with:
-          name: helloMobileFXApp
-          path: app/build/Release/HelloMobileFXApp.xcarchive
+          name: helloFXMobileApp
+          path: app/build/Release/HelloFXMobileApp.xcarchive

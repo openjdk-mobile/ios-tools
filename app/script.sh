@@ -28,6 +28,15 @@ fi
 mkdir build
 cd build || exit
 
+if [[ "$local" == false ]]; then
+  mkdir jdk
+  wget -nv -O jdk/macos-jdk.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/macos-jdk.zip
+  unzip -q jdk/macos-jdk.zip -d jdk
+  rm jdk/macos-jdk.zip
+  chmod +x jdk/macos-jdk/bin/javac
+  chmod +x jdk/macos-jdk/bin/jar
+fi
+
 mkdir hellofx
 cd hellofx || exit
 echo \
@@ -78,8 +87,8 @@ if [[ "$local" == true ]]; then
   "$root/../sdk/mobile/build/jfx/images/jdk/bin/javac" HelloFX.java
   "$root/../sdk/mobile/build/jfx/images/jdk/bin/jar" cf HelloFX.jar HelloFX.class openduke.png
 else
-  javac HelloFX.java
-  jar cf HelloFX.jar HelloFX.class
+  ../jdk/macos-jdk/bin/javac HelloFX.java
+  ../jdk/macos-jdk/bin/jar cf HelloFX.jar HelloFX.class
 fi
 cd ..
 
@@ -109,7 +118,7 @@ else
   unzip -q lib/java_bundle-device.zip -d lib
   rm lib/java_bundle-device.zip
   cp lib/java_bundle-device/lib/modules HelloFXMobileApp/HelloFXMobileApp/lib/lib/
-  cp ./macos-jdk/lib/tzdb.dat HelloFXMobileApp/HelloFXMobileApp/lib/lib/
+  cp ./jdk/macos-jdk/lib/tzdb.dat HelloFXMobileApp/HelloFXMobileApp/lib/lib/
 fi
 
 xcodegen generate --spec="$root/HelloFXMobileApp/project.xml" --project="$root/HelloFXMobileApp"

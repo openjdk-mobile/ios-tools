@@ -25,7 +25,7 @@ cp $LIBFFI_SIM/libffi.a $SIMULATOR_TARGET
 cp $OPENJDK_SIMULATOR_BUILD/images/static-libs/lib/*.a $SIMULATOR_TARGET
 cp $OPENJDK_SIMULATOR_BUILD/images/static-libs/lib/zero/libjvm.a $SIMULATOR_TARGET
 cd $SIMULATOR_TARGET
-libtool -static -o libdevice.a libjvm.a libffi.a libjava.a libzip.a libnet.a libnio.a libjimage.a \
+libtool -static -o libsim.a libjvm.a libffi.a libjava.a libzip.a libnet.a libnio.a libjimage.a \
   libglass.a libjavafx_font.a libjavafx_iio.a libprism_common.a libprism_es2.a
 cd ..
 

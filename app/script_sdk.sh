@@ -43,7 +43,7 @@ if [[ "$doSim" = true ]] && [[ ! -d "libffi-sim" ]]; then
 fi
 
 if [[ ! -d "openjfx-build" ]]; then
-  git clone --depth 1 git@github.com:openjdk-mobile/openjfx-build.git
+  git clone --depth 1 https://github.com/openjdk-mobile/openjfx-build.git
 fi
 
 if [[ ! -d "jfx" ]]; then

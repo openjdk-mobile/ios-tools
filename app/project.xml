@@ -1,33 +1,42 @@
-name: HelloMobileApp
+name: HelloFXMobileApp
 options:
-  bundleIdPrefix: com.example.helloworld
+  bundleIdPrefix: com.gluonhq.hellofx
 targets:
-  HelloMobileApp:
+  HelloFXMobileApp:
     type: application
     platform: iOS
+    deploymentTarget: "15.0"
     dependencies:
-      - framework: HelloMobileApp/OpenJDK.xcframework
+      - framework: HelloFXMobileApp/OpenJDK.xcframework
+        embed: false
+        link: true
       - sdk: libz.tbd
     sources:
-      - path: HelloMobileApp
+      - path: HelloFXMobileApp
         excludes: 
           - "**/lib"
           - "**/OpenJDK.xcframework"
-      - path: HelloMobileApp/lib
+      - path: HelloFXMobileApp/lib
         type: folder
         buildPhase:
           resources
-    info:
-      path: HelloMobileApp/Info.plist
-      properties:
-        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
-        UILaunchStoryboardName: LaunchScreen
-        UIMainStoryboardFile: Main
     settings:
       base:
         OTHER_LDFLAGS: -lc++
-        DEVELOPMENT_TEAM: GET_DEVELOPMENT_TEAM
-        GENERATE_INFOPLIST_FILE: Yes
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.helloworld.HelloMobileApp
+        ENABLE_TESTABILITY: YES
         ENABLE_DEBUG_DYLIB: No
+        INFOPLIST_FILE: HelloFXMobileApp/Info.plist
+        GENERATE_INFOPLIST_FILE: Yes
+        PRODUCT_NAME: HelloFXMobileApp
+        PRODUCT_BUNDLE_IDENTIFIER: com.gluonhq.hellofx.HelloFXMobileApp
+        DEVELOPMENT_TEAM: GET_DEVELOPMENT_TEAM
+        MARKETING_VERSION: '1.0.0'
+        CURRENT_PROJECT_VERSION: GET_CURRENT_VERSION
+      configs:
+        debug:
+          PROVISIONING_PROFILE_SPECIFIER: "AllInOne"
+          CODE_SIGN_IDENTITY: iPhone Developer
+        release:
+          PROVISIONING_PROFILE_SPECIFIER: "HelloFXMobileApp"
+          CODE_SIGN_IDENTITY: iPhone Distribution
 

@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "Gluon-app-store-icon-1024@1x.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

@@ -12,12 +12,21 @@ jobs:
   build-openjdk-sim:
     uses: ./.github/workflows/build-openjdk-sim.yml
 
+  build-openjdk-macos:
+    uses: ./.github/workflows/build-openjdk-macos.yml
+
   combine:
-    needs: [ build-openjdk, build-openjdk-sim ]
+    needs: [ build-openjdk, build-openjdk-sim, build-openjdk-macos ]
     runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Download JDK for macOS
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-jdk
+          path: ./macos-jdk
 
       - name: Download java.base for device
         uses: actions/download-artifact@v4
@@ -25,11 +34,26 @@ jobs:
           name: java.base-device
           path: ./java.base-device/java.base
 
+      - name: Create modules jimage for device
+        run: |
+          chmod +x ./macos-jdk/bin/jmod
+          chmod +x ./macos-jdk/bin/jlink
+          
+          mkdir jmods-device
+          ./macos-jdk/bin/jmod create --class-path ./java.base-device/java.base --target-platform ios-aarch64 jmods-device/java.base.jmod
+          ./macos-jdk/bin/jlink --module-path ./jmods-device --add-modules java.base --output java_bundle-device
+
       - name: Download java.base for simulator
         uses: actions/download-artifact@v4
         with:
           name: java.base-simulator
           path: ./java.base-simulator/java.base
+
+      - name: Create modules jimage for simulator
+        run: |
+          mkdir jmods-simulator
+          ./macos-jdk/bin/jmod create --class-path ./java.base-simulator/java.base --target-platform ios-aarch64 jmods-simulator/java.base.jmod
+          ./macos-jdk/bin/jlink --module-path ./jmods-simulator --add-modules java.base --output java_bundle-simulator
 
       - name: Download and unzip mobile-support
         env:
@@ -56,19 +80,19 @@ jobs:
           chmod +x .github/scripts/build-xcframework.sh
           .github/scripts/build-xcframework.sh
 
-      - name: Compress XCFramework and java.base module
+      - name: Compress XCFramework and modules jimage
         run: |
           zip -r OpenJDK.xcframework.zip OpenJDK.xcframework
-          cd java.base-device
-          zip -r ../java.base-device.zip java.base
-          cd ../java.base-simulator
-          zip -r ../java.base-simulator.zip java.base
+          zip -r java_bundle-device.zip java_bundle-device
+          zip -r java_bundle-simulator.zip java_bundle-simulator
 
-      - name: Upload XCFramework and java.base module
+      - name: Upload XCFramework and modules jimage
         uses: actions/upload-artifact@v4
         with:
-          name: OpenJDK.xcframework
-          path: ./OpenJDK.xcframework
+          path: |
+            ./OpenJDK.xcframework
+            ./java_bundle-device
+            ./java_bundle-simulator
 
       - name: Create snapshot release
         uses: softprops/action-gh-release@v2
@@ -78,5 +102,5 @@ jobs:
           prerelease: true
           files: |
             OpenJDK.xcframework.zip
-            java.base-device.zip
-            java.base-simulator.zip
+            java_bundle-device.zip
+            java_bundle-simulator.zip

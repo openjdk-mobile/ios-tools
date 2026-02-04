@@ -1,0 +1,28 @@
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>teamID</key>
+  <string>S7ZR395D8U</string>
+  <key>method</key>
+  <string>app-store-connect</string>
+  <key>destination</key>
+  <string>upload</string>
+  <key>manageAppVersionAndBuildNumber</key>
+  <true/>
+  <key>uploadBitcode</key>
+  <false/>
+  <key>uploadSymbols</key>
+  <true/>
+  <key>compileBitcode</key>
+  <false/>
+  <key>signingStyle</key>
+  <string>manual</string>
+  <key>provisioningProfiles</key>
+  <dict>
+      <key>com.gluonhq.helloworld.HelloMobileApp</key>
+      <string>4747631a-db2e-436a-a959-3bbf15b06d83</string>
+  </dict>
+  <key>signingCertificate</key>
+  <string>FB1D3C4597C1317BF79FE4A0F5CAA356DE9427E4</string>
+</dict>
+</plist>

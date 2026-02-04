@@ -18,7 +18,7 @@ jobs:
           echo '/usr/local/opt/make/libexec/gnubin' >> $GITHUB_PATH
 
       - name: Checkout builder repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 25
         uses: actions/setup-java@v4
@@ -34,9 +34,6 @@ jobs:
           mkdir -p ../support
           unzip libffi-ios.zip -d ../support
           echo "unzip done"
-          ls -l ..
-          ls -l ../support
-          pwd
           echo "$(realpath ../support)"
 
       - name: Clone OpenJDK Mobile sources
@@ -46,10 +43,7 @@ jobs:
           cd mobile
           # optionally checkout a specific branch or tag
           git checkout master
-          pwd
-          ls -l .
-          ls -l ..
-          ls -l ../../support
+          
           bash configure \
           --with-conf-name=ios-aarch64-zero-release \
           --disable-warnings-as-errors \

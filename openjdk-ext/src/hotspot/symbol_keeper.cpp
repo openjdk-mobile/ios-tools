@@ -1,5 +1,7 @@
 extern void* JIMAGE_Open;
 extern void* JIMAGE_Close;
+extern void* JIMAGE_FindResource;
+extern void* JIMAGE_GetResource;
 extern void* JDK_Canonicalize;
 extern void* Java_java_lang_reflect_Array_get;
 extern void* Java_java_lang_reflect_Array_getBoolean;
@@ -452,7 +454,9 @@ extern void* Java_java_util_zip_Inflater_setDictionary;
 extern void* Java_java_util_zip_Inflater_setDictionaryBuffer;
 void* duml0 = JIMAGE_Open;
 void* duml1 = JIMAGE_Close;
-void* duml2 = JDK_Canonicalize;
+void* duml2 = JIMAGE_FindResource;
+void* duml3 = JIMAGE_GetResource;
+void* duml4 = JDK_Canonicalize;
 void* l10 = Java_java_lang_reflect_Array_get;
 void* l11 = Java_java_lang_reflect_Array_getBoolean;
 void* l12 = Java_java_lang_reflect_Array_getByte;

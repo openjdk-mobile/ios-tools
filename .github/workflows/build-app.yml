@@ -39,10 +39,17 @@ jobs:
           api-key-id: ${{ secrets.GLUON_IOS_APPSTORE_KEY_ID }}
           api-private-key: ${{ secrets.GLUON_IOS_APPSTORE_PRIVATE_KEY }}
 
+      - name: Download JDK for macOS
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-jdk
+          path: ./macos-jdk
+
       - name: Run build script
         run: |
+          export JAVA_HOME=./macos-jdk/
           cd app
-          ./script.sh
+          ./script.sh false false false
         env:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
           CURRENT_VERSION: ${{ github.run_number }}

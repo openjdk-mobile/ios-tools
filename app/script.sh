@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-local=true
-sign=false
-upload=false
+local=${1:-"true"}
+sign=${2:-"false"}
+upload=${3:-"false"}
 
 root=$PWD/build
 rm -rf build
@@ -73,12 +73,11 @@ public class HelloFX extends Application {
    }
 }
 ' > HelloFX.java
+cp "$root/../../openduke.png" .
 if [[ "$local" == true ]]; then
-  cp "$root/../../openduke.png" .
   "$root/../sdk/mobile/build/jfx/images/jdk/bin/javac" HelloFX.java
   "$root/../sdk/mobile/build/jfx/images/jdk/bin/jar" cf HelloFX.jar HelloFX.class openduke.png
 else
-  # todo: add javafx modules
   javac HelloFX.java
   jar cf HelloFX.jar HelloFX.class
 fi
@@ -110,7 +109,7 @@ else
   unzip -q lib/java_bundle-device.zip -d lib
   rm lib/java_bundle-device.zip
   cp lib/java_bundle-device/lib/modules HelloFXMobileApp/HelloFXMobileApp/lib/lib/
-  #todo: add tzdb.dat to zip and copy
+  cp ./macos-jdk/lib/tzdb.dat HelloFXMobileApp/HelloFXMobileApp/lib/lib/
 fi
 
 xcodegen generate --spec="$root/HelloFXMobileApp/project.xml" --project="$root/HelloFXMobileApp"

@@ -1,5 +1,5 @@
 diff --git a/make/modules/javafx.graphics/Lib.gmk b/make/modules/javafx.graphics/Lib.gmk
-index 842f42147..931ccc066 100644
+index 842f42147..60e797435 100644
 --- a/make/modules/javafx.graphics/Lib.gmk
 +++ b/make/modules/javafx.graphics/Lib.gmk
 @@ -21,7 +21,7 @@ $(eval $(call SetupJdkLibrary, BUILD_LIBPRISM_COMMON, \
@@ -51,11 +51,19 @@ index 842f42147..931ccc066 100644
      LIBS_windows := -manifest -dynamicbase -nxcompat delayimp.lib gdi32.lib urlmon.lib Comdlg32.lib winmm.lib imm32.lib shell32.lib Uiautomationcore.lib dwmapi.lib version.lib /DELAYLOAD:user32.dll /DELAYLOAD:urlmon.dll /DELAYLOAD:winmm.dll /DELAYLOAD:shell32.dll /DELAYLOAD:Uiautomationcore.dll /DELAYLOAD:dwmapi.dll /DELAYLOAD:version.dll, \
      EXTRA_FILES := $(EXTRA_GLASS_SRC), \
      CFLAGS_macosx := -DMACOS_MIN_VERSION_MAJOR=11 -DMACOS_MIN_VERSION_MINOR=0, \
-@@ -178,6 +186,7 @@ $(eval $(call SetupJdkLibrary, BUILD_LIBJAVAFXIIO, \
+@@ -173,11 +181,15 @@ endif
+ ## Build libjavafx_iio
+ ################################################################################
+
++ifeq ($(call isTargetOs, ios), true)
++   PLATFORM_IIO_SRC := $(OPENJFX_MODULES_SRC)/modules/javafx.graphics/src/main/native-iio/ios
++endif
+ $(eval $(call SetupJdkLibrary, BUILD_LIBJAVAFXIIO, \
+     NAME := javafx_iio, \
      LINK_TYPE := C++, \
      OPTIMIZATION := HIGH, \
      SRC := $(OPENJFX_MODULES_SRC)/modules/javafx.graphics/src/main/native-iio/libjpeg, \
-+    EXTRA_SRC_ios := $(OPENJFX_MODULES_SRC)/modules/javafx.graphics/src/main/native-iio/ios, \
++    EXTRA_SRC := $(PLATFORM_IIO_SRC), \
      EXTRA_FILES := $(OPENJFX_MODULES_SRC)/modules/javafx.graphics/src/main/native-iio/jpegloader.c, \
      LIBS_windows := -manifest -dynamicbase -nxcompat, \
      CFLAGS_windows := -EHsc -D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR -DINLINE=__inline -permissive, \

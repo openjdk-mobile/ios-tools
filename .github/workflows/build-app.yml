@@ -34,7 +34,7 @@ jobs:
 
       - uses: Apple-Actions/download-provisioning-profiles@v4
         with:
-          bundle-id: com.gluonhq.helloworld.HelloMobileApp
+          bundle-id: com.gluonhq.hellofx.HelloFXMobileApp
           issuer-id: ${{ secrets.GLUON_IOS_APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.GLUON_IOS_APPSTORE_KEY_ID }}
           api-private-key: ${{ secrets.GLUON_IOS_APPSTORE_PRIVATE_KEY }}

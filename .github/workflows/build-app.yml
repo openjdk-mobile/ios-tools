@@ -42,7 +42,7 @@ jobs:
       - name: Run build script
         run: |
           cd app
-          ./script.sh false false false
+          ./script.sh false true true
         env:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
           CURRENT_VERSION: ${{ github.run_number }}

@@ -29,14 +29,13 @@ targets:
         GENERATE_INFOPLIST_FILE: Yes
         PRODUCT_NAME: HelloFXMobileApp
         PRODUCT_BUNDLE_IDENTIFIER: com.gluonhq.hellofx.HelloFXMobileApp
+        PROVISIONING_PROFILE_SPECIFIER: "HelloFXWorld"
         DEVELOPMENT_TEAM: GET_DEVELOPMENT_TEAM
         MARKETING_VERSION: '1.0.0'
         CURRENT_PROJECT_VERSION: GET_CURRENT_VERSION
       configs:
         debug:
-          PROVISIONING_PROFILE_SPECIFIER: "AllInOne"
           CODE_SIGN_IDENTITY: iPhone Developer
         release:
-          PROVISIONING_PROFILE_SPECIFIER: "HelloFXMobileApp"
-          CODE_SIGN_IDENTITY: iPhone Distribution
+          CODE_SIGN_IDENTITY: Apple Distribution
 

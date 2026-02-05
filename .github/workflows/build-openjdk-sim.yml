@@ -42,10 +42,13 @@ jobs:
           cd jfx
 
           # temporary patches
-          git apply ../.github/patches/jfx-patch.diff
+          git apply ../.github/patches/jfx-es2-patch.diff
+          git apply ../.github/patches/jfx-glass-patch.diff
 
           sh gradlew shadersClasses
           cd ..
+          jfxversion=$(grep "^[#]*\s*jfx.release.major.version" jfx/build.properties | cut -d'=' -f2)$(grep "^[#]*\s*jfx.release.suffix=" jfx/build.properties | cut -d'=' -f2)
+          echo "RUNTIME_VERSION=$jfxversion" >> $GITHUB_ENV
 
       - name: Clone OpenJDK Mobile sources
         run: |
@@ -75,6 +78,8 @@ jobs:
           make LOG=cmdlines,info CONF=iossim-aarch64-zero-release static-libs-image
           cp build/iossim-aarch64-zero-release/jdk/include/ios/jni_md.h build/iossim-aarch64-zero-release/jdk/include/
           cd ..
+        env:
+          RUNTIME_VERSION: ${{ env.RUNTIME_VERSION }}
 
       - name: Upload device artifact
         uses: actions/upload-artifact@v4

@@ -49,16 +49,20 @@ fi
 if [[ ! -d "jfx" ]]; then
   git clone --depth 1 https://github.com/openjdk/jfx.git
   cd jfx || exit
-  git apply "$root/../../jfx-patch.diff"
+  git apply "$root/../../.github/patches/jfx-es2-patch.diff"
+  git apply "$root/../../.github/patches/jfx-glass-patch.diff"
   sh gradlew shadersClasses
   cd ..
 fi
+jfxversion=$(grep "^[#]*\s*jfx.release.major.version" jfx/build.properties | cut -d'=' -f2)$(grep "^[#]*\s*jfx.release.suffix=" jfx/build.properties | cut -d'=' -f2)
+export RUNTIME_VERSION=$jfxversion
 
 if [[ ! -d "mobile" ]]; then
   git clone --depth 1 https://github.com/openjdk/mobile/
   cd mobile || exit
   patch -p1 < ../openjfx-build/openjdk-ext/src/jfx.patch
-  git apply "$root/../../lib-patch.diff"
+  git apply "$root/../../.github/patches/lib-patch.diff"
+  git apply "$root/../../.github/patches/version-patch.diff"
   cd ..
 fi
 

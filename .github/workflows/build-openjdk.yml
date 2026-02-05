@@ -43,6 +43,7 @@ jobs:
           
           # temporary patches
           git apply ../.github/patches/jfx-es2-patch.diff
+          git apply ../.github/patches/jfx-pthread-patch.diff
           git apply ../.github/patches/jfx-glass-patch.diff
           
           sh gradlew shadersClasses

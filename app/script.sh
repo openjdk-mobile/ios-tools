@@ -39,56 +39,13 @@ fi
 
 mkdir hellofx
 cd hellofx || exit
-echo \
-'
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.scene.text.Font;
-
-public class HelloFX extends Application {
-
-   public void start(Stage stage) {
-       System.out.println("StartFX");
-       String javaVersion = System.getProperty("java.version");
-       String javafxVersion = System.getProperty("javafx.version");
-
-       ImageView imageView = new ImageView(new Image(HelloFX.class.getResourceAsStream("openduke.png")));
-               imageView.setFitHeight(200);
-               imageView.setPreserveRatio(true);
-
-       Label label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion +
-            " and OS name:arch :: " + System.getProperty("os.name") + ":" + System.getProperty("os.arch"));
-       label.setWrapText(true);
-       label.setFont(new Font(16));
-
-       VBox root = new VBox(20, imageView, label);
-       root.setAlignment(Pos.CENTER);
-       root.setPadding(new Insets(20));
-       Scene scene = new Scene(root, 640, 480);
-       stage.setScene(scene);
-       stage.show();
-   }
-
-   public static void main(String[] args) {
-       System.out.println("Hello JavaFX: " + System.getProperty("os.name") + ":" + System.getProperty("os.arch"));
-       try { launch(args); } catch (Throwable t) { t.printStackTrace(); }
-   }
-}
-' > HelloFX.java
-cp "$root/../../openduke.png" .
+cp -r "$root/../sample/" .
 if [[ "$local" == true ]]; then
   "$root/../sdk/mobile/build/jfx/images/jdk/bin/javac" HelloFX.java
   "$root/../sdk/mobile/build/jfx/images/jdk/bin/jar" cf HelloFX.jar HelloFX.class openduke.png
 else
   ../jdk/macos-jdk/bin/javac HelloFX.java
-  ../jdk/macos-jdk/bin/jar cf HelloFX.jar HelloFX.class
+  ../jdk/macos-jdk/bin/jar cf HelloFX.jar HelloFX.class openduke.png
 fi
 cd ..
 
@@ -96,6 +53,7 @@ mkdir -p HelloFXMobileApp/HelloFXMobileApp
 cp -R ../source/*.* HelloFXMobileApp/HelloFXMobileApp
 cp ../project.xml HelloFXMobileApp/project.xml
 sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" HelloFXMobileApp/project.xml
+sed -i '' "s/GET_CURRENT_VERSION/$CURRENT_VERSION/g" HelloFXMobileApp/project.xml
 cp hellofx/HelloFX.jar HelloFXMobileApp/HelloFXMobileApp
 
 mkdir framework
@@ -140,14 +98,15 @@ if [[ ! -d "$root/Release/HelloFXMobileApp.xcarchive" ]]; then
     echo "$root/Release/HelloFXMobileApp.xcarchive doesn't exist"
     exit 1
 fi
-sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" "$root/../exportOptions.plist"
+cp "$root/../exportOptions.plist" "$root/Release/"
+sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" "$root/Release/exportOptions.plist"
 
 mkdir -p "$root/HelloFXMobileApp/private_keys"
 echo "$API_PRIVATE_KEY" >> "$root/HelloFXMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
 
 if [[ "$upload" == true ]]; then
   echo "Export and upload ipa"
-  xcodebuild -exportArchive -archivePath "$root/Release/HelloFXMobileApp.xcarchive" -exportPath "$root/Release/Archives/HelloFXMobileApp.ipa" -exportOptionsPlist "$root/../exportOptions.plist" -authenticationKeyID "$API_KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID" -authenticationKeyPath "$root/HelloFXMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
+  xcodebuild -exportArchive -archivePath "$root/Release/HelloFXMobileApp.xcarchive" -exportPath "$root/Release/Archives/HelloFXMobileApp.ipa" -exportOptionsPlist "$root/Release/exportOptions.plist" -authenticationKeyID "$API_KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID" -authenticationKeyPath "$root/HelloFXMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
   if [[ $? != 0 ]]; then
       echo "Xcode build upload failed"
       exit 1

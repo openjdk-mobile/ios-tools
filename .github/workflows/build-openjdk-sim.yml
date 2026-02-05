@@ -55,8 +55,9 @@ jobs:
           cd mobile
           patch -p1 < ../openjfx-build/openjdk-ext/src/jfx.patch
           
-          # temporary patch         
+          # temporary patches
           git apply ../.github/patches/lib-patch.diff
+          git apply ../.github/patches/version-patch.diff
           
           cp ../openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
           

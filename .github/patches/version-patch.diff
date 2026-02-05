@@ -1,0 +1,21 @@
+diff --git a/make/modules/javafx.base/Gensrc.gmk b/make/modules/javafx.base/Gensrc.gmk
+index 5f0d4c95f..cb82f4ca4 100644
+--- a/make/modules/javafx.base/Gensrc.gmk
++++ b/make/modules/javafx.base/Gensrc.gmk
+@@ -4,11 +4,11 @@ $(eval $(call SetupTextFileProcessing, BUILD_VERSION_JAVAFX, \
+     SOURCE_FILES := $(OPENJFX_MODULES_SRC)/modules/javafx.base/src/main/version-info/VersionInfo.java, \
+     OUTPUT_FILE := $(SUPPORT_OUTPUTDIR)/gensrc/javafx.base/com/sun/javafx/runtime/VersionInfo.java, \
+     REPLACEMENTS := \
+-        @@BUILD_TIMESTAMP@@ => $(BUILD_TIMESTAMP) ; \
+-        @@RELEASE_SUFFIX@@ => $(RELEASE_SUFFIX) ; \
+-        @@RELEASE_VERSION_SHORT@@ => $(RUNTIME_VERSION) ; \
+-        @@VERSION@@ => $(VERSION) ; \
+-        @@RUNTIME_VERSION@@ => $(RUNTIME_VERSION), \
++        @BUILD_TIMESTAMP@ => $(BUILD_TIMESTAMP) ; \
++        @RELEASE_SUFFIX@ => $(RELEASE_SUFFIX) ; \
++        @RELEASE_VERSION_SHORT@ => $(RUNTIME_VERSION) ; \
++        @VERSION@ => $(VERSION) ; \
++        @RUNTIME_VERSION@ => $(RUNTIME_VERSION), \
+ ))
+ 
+ TARGETS += $(BUILD_VERSION_JAVAFX)

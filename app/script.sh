@@ -45,14 +45,14 @@ sed -i '' "s/GET_CURRENT_VERSION/$CURRENT_VERSION/g" HelloMobileApp/project.xml
 cp helloworld/HelloWorld.jar HelloMobileApp/HelloMobileApp
 
 mkdir framework
-wget -nv -O framework/OpenJDK.xcframework.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/OpenJDK.xcframework.zip
+wget -nv -O framework/OpenJDK.xcframework.zip https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/OpenJDK.xcframework.zip
 unzip -q framework/OpenJDK.xcframework.zip -d framework
 rm framework/OpenJDK.xcframework.zip
 cp -R framework/OpenJDK.xcframework HelloMobileApp/HelloMobileApp
 
 mkdir -p lib
 mkdir -p HelloMobileApp/HelloMobileApp/lib/lib
-wget -nv -O lib/java_bundle-device.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/java_bundle-device.zip
+wget -nv -O lib/java_bundle-device.zip https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/java_bundle-device.zip
 unzip -q lib/java_bundle-device.zip -d lib
 rm lib/java_bundle-device.zip
 cp lib/java_bundle-device/lib/modules HelloMobileApp/HelloMobileApp/lib/lib/

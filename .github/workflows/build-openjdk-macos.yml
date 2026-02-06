@@ -30,9 +30,6 @@ jobs:
           git clone https://github.com/openjdk/mobile.git
           cd mobile
           
-          # optionally checkout a specific branch or tag
-          git checkout master
-          
           bash configure \
             --with-conf-name=macos-aarch64 \
             --with-boot-jdk=$JAVA_HOME \

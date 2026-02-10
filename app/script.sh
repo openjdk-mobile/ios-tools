@@ -75,8 +75,13 @@ fi
 cp "$root/../exportOptions.plist" "$root/Release/"
 sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" "$root/Release/exportOptions.plist"
 
+final_step() {
+    rm -rf "$root/HelloFXMobileApp/private_keys"
+}
 mkdir -p "$root/HelloMobileApp/private_keys"
 echo "$API_PRIVATE_KEY" >> "$root/HelloMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
+exit 1
+trap final_step EXIT
 
 echo "Export and upload ipa"
 xcodebuild -exportArchive -archivePath "$root/Release/HelloMobileApp.xcarchive" -exportPath "$root/Release/Archives/HelloMobileApp.ipa" -exportOptionsPlist "$root/Release/exportOptions.plist" -authenticationKeyID "$API_KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID" -authenticationKeyPath "$root/HelloMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"

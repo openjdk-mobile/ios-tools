@@ -1,4 +1,4 @@
-name: Build HelloMobileApp
+name: Build HelloFXMobileApp
 
 on:
   workflow_dispatch:

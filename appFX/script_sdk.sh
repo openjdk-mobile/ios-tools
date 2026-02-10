@@ -172,16 +172,16 @@ rm -rf framework
 mkdir framework
 if [[ "$doSim" = true ]]; then
   xcodebuild -create-xcframework \
-    -library $DEVICE_TARGET/libdevice.a \
-    -headers $root/mobile/build/ios-aarch64-zero-release/jdk/include \
-    -library $SIMULATOR_TARGET/libsimulator.a \
-    -headers $root/mobile/build/iossim-aarch64-zero-release/jdk/include \
-    -output framework/OpenJDK.xcframework
+    -library "$DEVICE_TARGET/libdevice.a" \
+    -headers "$root/mobile/build/ios-aarch64-zero-release/jdk/include" \
+    -library "$SIMULATOR_TARGET/libsimulator.a" \
+    -headers "$root/mobile/build/iossim-aarch64-zero-release/jdk/include" \
+    -output framework/OpenJDK-FX.xcframework
 else
   xcodebuild -create-xcframework \
-    -library $DEVICE_TARGET/libdevice.a \
-    -headers $root/mobile/build/ios-aarch64-zero-release/jdk/include \
-    -output framework/OpenJDK.xcframework
+    -library "$DEVICE_TARGET/libdevice.a" \
+    -headers "$root/mobile/build/ios-aarch64-zero-release/jdk/include" \
+    -output framework/OpenJDK-FX.xcframework
 fi
 
 echo "========== Done ==========="

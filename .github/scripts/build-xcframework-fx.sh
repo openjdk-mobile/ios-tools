@@ -39,4 +39,4 @@ xcodebuild -create-xcframework \
   -headers $OPENJDK_DEVICE_BUILD/jdk/include \
   -library $SIMULATOR_TARGET/libsim.a \
   -headers $OPENJDK_SIMULATOR_BUILD/jdk/include \
-  -output ./OpenJDK.xcframework
+  -output ./OpenJDK-FX.xcframework

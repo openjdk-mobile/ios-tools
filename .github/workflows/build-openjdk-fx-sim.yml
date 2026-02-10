@@ -1,4 +1,4 @@
-name: Build OpenJDK Mobile for ios sim
+name: Build OpenJDK+FX Mobile for ios sim
 
 on:
   workflow_call:
@@ -84,7 +84,7 @@ jobs:
       - name: Upload device artifact
         uses: actions/upload-artifact@v4
         with:
-          name: libs-simulator
+          name: libs-fx-simulator
           path: |
             mobile/build/iossim-aarch64-zero-release/images/static-libs/lib
             mobile/build/iossim-aarch64-zero-release/jdk/include
@@ -92,6 +92,6 @@ jobs:
       - name: Upload java.base
         uses: actions/upload-artifact@v4
         with:
-          name: java-modules-simulator
+          name: java-modules-fx-simulator
           path: |
             mobile/build/iossim-aarch64-zero-release/jdk/modules

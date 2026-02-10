@@ -1,4 +1,4 @@
-name: Build OpenJDK Mobile for macOS
+name: Build OpenJDK+FX Mobile for macOS
 
 on:
   workflow_call:
@@ -50,6 +50,6 @@ jobs:
       - name: Upload macOS JDK
         uses: actions/upload-artifact@v4
         with:
-          name: macos-jdk
+          name: macos-jdk-fx
           path: |
             mobile/build/jfx/images/jdk

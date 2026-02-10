@@ -30,11 +30,11 @@ cd build || exit
 
 if [[ "$local" == false ]]; then
   mkdir jdk
-  wget -nv -O jdk/macos-jdk.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/macos-jdk.zip
-  unzip -q jdk/macos-jdk.zip -d jdk
-  rm jdk/macos-jdk.zip
-  chmod +x jdk/macos-jdk/bin/javac
-  chmod +x jdk/macos-jdk/bin/jar
+  wget -nv -O jdk/macos-jdk-fx.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/macos-jdk-fx.zip
+  unzip -q jdk/macos-jdk-fx.zip -d jdk
+  rm jdk/macos-jdk-fx.zip
+  chmod +x jdk/macos-jdk-fx/bin/javac
+  chmod +x jdk/macos-jdk-fx/bin/jar
 fi
 
 mkdir hellofx
@@ -44,8 +44,8 @@ if [[ "$local" == true ]]; then
   "$root/../sdk/mobile/build/jfx/images/jdk/bin/javac" HelloFX.java
   "$root/../sdk/mobile/build/jfx/images/jdk/bin/jar" cf HelloFX.jar HelloFX.class openduke.png
 else
-  ../jdk/macos-jdk/bin/javac HelloFX.java
-  ../jdk/macos-jdk/bin/jar cf HelloFX.jar HelloFX.class openduke.png
+  ../jdk/macos-jdk-fx/bin/javac HelloFX.java
+  ../jdk/macos-jdk-fx/bin/jar cf HelloFX.jar HelloFX.class openduke.png
 fi
 cd ..
 
@@ -60,11 +60,11 @@ mkdir framework
 if [[ "$local" == true ]]; then
   cp -R ../sdk/framework .
 else
-  wget -nv -O framework/OpenJDK.xcframework.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/OpenJDK.xcframework.zip
-  unzip -q framework/OpenJDK.xcframework.zip -d framework
-  rm framework/OpenJDK.xcframework.zip
+  wget -nv -O framework/OpenJDK-FX.xcframework.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/OpenJDK-FX.xcframework.zip
+  unzip -q framework/OpenJDK-FX.xcframework.zip -d framework
+  rm framework/OpenJDK-FX.xcframework.zip
 fi
-cp -R framework/OpenJDK.xcframework HelloFXMobileApp/HelloFXMobileApp
+cp -R framework/OpenJDK-FX.xcframework HelloFXMobileApp/HelloFXMobileApp
 
 mkdir -p HelloFXMobileApp/HelloFXMobileApp/lib/lib
 if [[ "$local" == true ]]; then
@@ -72,11 +72,11 @@ if [[ "$local" == true ]]; then
   cp "$root/../sdk/mobile/build/jfx/images/jdk/lib/tzdb.dat" HelloFXMobileApp/HelloFXMobileApp/lib/lib/
 else
   mkdir -p lib
-  wget -nv -O lib/java_bundle-device.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/java_bundle-device.zip
-  unzip -q lib/java_bundle-device.zip -d lib
-  rm lib/java_bundle-device.zip
-  cp lib/java_bundle-device/lib/modules HelloFXMobileApp/HelloFXMobileApp/lib/lib/
-  cp ./jdk/macos-jdk/lib/tzdb.dat HelloFXMobileApp/HelloFXMobileApp/lib/lib/
+  wget -nv -O lib/java_bundle-fx-device.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/java_bundle-fx-device.zip
+  unzip -q lib/java_bundle-fx-device.zip -d lib
+  rm lib/java_bundle-fx-device.zip
+  cp lib/java_bundle-fx-device/lib/modules HelloFXMobileApp/HelloFXMobileApp/lib/lib/
+  cp ./jdk/macos-jdk-fx/lib/tzdb.dat HelloFXMobileApp/HelloFXMobileApp/lib/lib/
 fi
 
 xcodegen generate --spec="$root/HelloFXMobileApp/project.xml" --project="$root/HelloFXMobileApp"
@@ -101,8 +101,12 @@ fi
 cp "$root/../exportOptions.plist" "$root/Release/"
 sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" "$root/Release/exportOptions.plist"
 
+final_step() {
+    rm -rf "$root/HelloFXMobileApp/private_keys"
+}
 mkdir -p "$root/HelloFXMobileApp/private_keys"
 echo "$API_PRIVATE_KEY" >> "$root/HelloFXMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
+trap final_step EXIT
 
 if [[ "$upload" == true ]]; then
   echo "Export and upload ipa"

@@ -1,0 +1,41 @@
+name: HelloMobileApp
+options:
+  bundleIdPrefix: com.gluonhq.helloworld
+targets:
+  HelloMobileApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    dependencies:
+      - framework: HelloMobileApp/OpenJDK.xcframework
+        embed: false
+        link: true
+      - sdk: libz.tbd
+    sources:
+      - path: HelloMobileApp
+        excludes: 
+          - "**/lib"
+          - "**/OpenJDK.xcframework"
+      - path: HelloMobileApp/lib
+        type: folder
+        buildPhase:
+          resources
+    settings:
+      base:
+        OTHER_LDFLAGS: -lc++
+        ENABLE_TESTABILITY: YES
+        ENABLE_DEBUG_DYLIB: No
+        INFOPLIST_FILE: HelloMobileApp/Info.plist
+        GENERATE_INFOPLIST_FILE: Yes
+        PRODUCT_NAME: HelloMobileApp
+        PRODUCT_BUNDLE_IDENTIFIER: com.gluonhq.helloworld.HelloMobileApp
+        PROVISIONING_PROFILE_SPECIFIER: "HelloMobileApp"
+        DEVELOPMENT_TEAM: GET_DEVELOPMENT_TEAM
+        MARKETING_VERSION: '1.0.1'
+        CURRENT_PROJECT_VERSION: GET_CURRENT_VERSION
+      configs:
+        debug:
+          CODE_SIGN_IDENTITY: iPhone Developer
+        release:
+          CODE_SIGN_IDENTITY: Apple Distribution
+

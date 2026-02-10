@@ -1,0 +1,106 @@
+name: Combine XCFramework
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # run at 3 AM UTC
+  workflow_dispatch:
+
+jobs:
+  build-openjdk:
+    uses: ./.github/workflows/build-openjdk.yml
+
+  build-openjdk-sim:
+    uses: ./.github/workflows/build-openjdk-sim.yml
+
+  build-openjdk-macos:
+    uses: ./.github/workflows/build-openjdk-macos.yml
+
+  combine:
+    needs: [ build-openjdk, build-openjdk-sim, build-openjdk-macos ]
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download JDK for macOS
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-jdk
+          path: ./macos-jdk
+
+      - name: Download java.base for device
+        uses: actions/download-artifact@v4
+        with:
+          name: java.base-device
+          path: ./java.base-device/java.base
+
+      - name: Create modules jimage for device
+        run: |
+          chmod +x ./macos-jdk/bin/jmod
+          chmod +x ./macos-jdk/bin/jlink
+          
+          mkdir jmods-device
+          ./macos-jdk/bin/jmod create --class-path ./java.base-device/java.base --target-platform ios-aarch64 jmods-device/java.base.jmod
+          ./macos-jdk/bin/jlink --module-path ./jmods-device --add-modules java.base --output java_bundle-device
+
+      - name: Download java.base for simulator
+        uses: actions/download-artifact@v4
+        with:
+          name: java.base-simulator
+          path: ./java.base-simulator/java.base
+
+      - name: Create modules jimage for simulator
+        run: |
+          mkdir jmods-simulator
+          ./macos-jdk/bin/jmod create --class-path ./java.base-simulator/java.base --target-platform ios-aarch64 jmods-simulator/java.base.jmod
+          ./macos-jdk/bin/jlink --module-path ./jmods-simulator --add-modules java.base --output java_bundle-simulator
+
+      - name: Download and unzip mobile-support
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download libffi-build -p "libffi-ios.zip" -p "libffi-ios-sim.zip"
+          unzip libffi-ios.zip -d libffi-ios
+          unzip libffi-ios-sim.zip -d libffi-ios-sim
+
+      - name: Download device artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: libjvm-device
+          path: ./device
+
+      - name: Download simulator artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: libjvm-simulator
+          path: ./simulator
+
+      - name: Create XCFramework
+        run: |
+          chmod +x .github/scripts/build-xcframework.sh
+          .github/scripts/build-xcframework.sh
+
+      - name: Compress XCFramework and modules jimage
+        run: |
+          zip -r OpenJDK.xcframework.zip OpenJDK.xcframework
+          zip -r java_bundle-device.zip java_bundle-device
+          zip -r java_bundle-simulator.zip java_bundle-simulator
+
+      - name: Upload XCFramework and modules jimage
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            ./OpenJDK.xcframework
+            ./java_bundle-device
+            ./java_bundle-simulator
+
+      - name: Create snapshot release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Snapshot release"
+          tag_name: snapshot
+          prerelease: true
+          files: |
+            OpenJDK.xcframework.zip
+            java_bundle-device.zip
+            java_bundle-simulator.zip

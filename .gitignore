@@ -23,5 +23,7 @@
 hs_err_pid*
 replay_pid*
 .idea
+app/build
+app/sdk
 appFX/build
 appFX/sdk

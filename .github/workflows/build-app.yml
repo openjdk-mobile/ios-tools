@@ -1,0 +1,57 @@
+name: Build HelloMobileApp
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [ "Combine XCFramework" ]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: macos-26
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: 'Install toolchain and dependencies'
+        run: |
+          # Run Homebrew installation and xcode-select
+          brew install xcodegen
+          sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+      - name: Checkout builder repo
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - uses: Apple-Actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.GLUON_IOS_CERTIFICATES_FILE_BASE64 }}
+          p12-password: ${{ secrets.GLUON_IOS_CERTIFICATES_PASSWORD }}
+
+      - uses: Apple-Actions/download-provisioning-profiles@v4
+        with:
+          bundle-id: com.gluonhq.helloworld.HelloMobileApp
+          issuer-id: ${{ secrets.GLUON_IOS_APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.GLUON_IOS_APPSTORE_KEY_ID }}
+          api-private-key: ${{ secrets.GLUON_IOS_APPSTORE_PRIVATE_KEY }}
+
+      - name: Run build script
+        run: |
+          cd app
+          ./script.sh
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+          CURRENT_VERSION: ${{ github.run_number }}
+          ISSUER_ID: ${{ secrets.GLUON_IOS_APPSTORE_ISSUER_ID }}
+          API_KEY_ID: ${{ secrets.GLUON_IOS_APPSTORE_KEY_ID }}
+          API_PRIVATE_KEY: ${{ secrets.GLUON_IOS_APPSTORE_PRIVATE_KEY }}
+
+      - name: Upload iOS IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: helloMobileApp
+          path: app/build/Release/HelloMobileApp.xcarchive

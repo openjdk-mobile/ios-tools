@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-openjdk:
+  build-openjdk-fx:
     uses: ./.github/workflows/build-openjdk-fx.yml
 
-  build-openjdk-sim:
+  build-openjdk-fx-sim:
     uses: ./.github/workflows/build-openjdk-fx-sim.yml
 
-  build-openjdk-macos:
+  build-openjdk-fx-macos:
     uses: ./.github/workflows/build-openjdk-fx-macos.yml
 
   combine:

@@ -63,6 +63,7 @@ jobs:
           git apply ../.github/patches/version-patch.diff
           
           cp ../openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
+          cp ../openjdk-ext/src/hotspot/symbol_fx_keeper.cpp src/hotspot/os/bsd
           
           bash configure \
             --with-conf-name=iossim-aarch64-zero-release \

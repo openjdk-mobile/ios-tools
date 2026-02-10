@@ -3,7 +3,8 @@
 #include "jni.h"
 #include <stdio.h>
 
-extern void loadfunctions(void);
+extern void load_functions(void);
+extern void load_fx_functions(void);
 void *launchJava(void *unused);
 
 int main(int argc, char *argv[]) {
@@ -39,7 +40,8 @@ void* launchJava(void *unused) {
     vm_args.version = JNI_VERSION_1_8; // needed to initialize JavaVM
     vm_args.nOptions = 5;
     vm_args.options = options;
-    loadfunctions();
+    load_functions();
+    load_fx_functions();
     fprintf(stderr, "Create JavaVM\n");
     jint res = JNI_CreateJavaVM(&jvm, (void **)&env, &vm_args);
     if (res != JNI_OK) {

@@ -81,6 +81,7 @@ fi
 if [[ ! -d "$root/mobile/build/ios-aarch64-zero-release/images/static-libs/lib" ]];  then
   echo "========== iOS SDK ==========="
   cp "$root/../../openjdk-ext/src/hotspot/symbol_keeper.cpp" "$root/mobile/src/hotspot/os/bsd"
+  cp "$root/../../openjdk-ext/src/hotspot/symbol_fx_keeper.cpp" "$root/mobile/src/hotspot/os/bsd"
 
   bash configure \
       --with-conf-name=ios-aarch64-zero-release \

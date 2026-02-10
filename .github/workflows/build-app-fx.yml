@@ -3,7 +3,7 @@ name: Build HelloFXMobileApp
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [ "Combine XCFramework" ]
+    workflows: [ "Combine XCFramework FX" ]
     types:
       - completed
 

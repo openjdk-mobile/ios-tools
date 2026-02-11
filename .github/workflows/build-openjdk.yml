@@ -72,7 +72,7 @@ jobs:
             --with-libffi-include=$(realpath ../../support/include/ffi) \
             --with-libffi-lib=$(realpath ../../support) \
             --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
-          make LOG=cmdlines,info CONF=ios-aarch64-zero-release javafx.controls-java static-libs-image
+          make LOG=cmdlines,info CONF=ios-aarch64-zero-release javafx.controls-java javafx.fxml-java static-libs-image
           cp build/ios-aarch64-zero-release/jdk/include/ios/jni_md.h build/ios-aarch64-zero-release/jdk/include/
           cd ..
         env:

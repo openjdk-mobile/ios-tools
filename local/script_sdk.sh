@@ -2,7 +2,7 @@
 set -e
 
 root=$PWD/sdk
-doSim=false
+doSim=true
 
 if type -p java; then
     _java=java
@@ -90,7 +90,7 @@ if [[ ! -d "$root/mobile/build/ios-aarch64-zero-release/images/static-libs/lib" 
       --with-libffi-include=$root/libffi/include/ffi \
       --with-libffi-lib=$root/libffi  \
       --with-cups-include="$(xcrun --sdk macosx --show-sdk-path)/usr/include"
-  make CONF=ios-aarch64-zero-release javafx.controls-java static-libs-image
+  make CONF=ios-aarch64-zero-release javafx.controls-java javafx.fxml-java static-libs-image
   ([ $? -eq 0 ] && echo "success!") || (echo "failure!" && exit 1)
   cp "$root/mobile/build/ios-aarch64-zero-release/jdk/include/ios/jni_md.h" "$root/mobile/build/ios-aarch64-zero-release/jdk/include/"
 fi
@@ -108,7 +108,7 @@ if [[ "$doSim" = true ]] && [[ ! -d "$root/mobile/build/iossim-aarch64-zero-rele
       --with-extra-cflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
       --with-extra-cxxflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
       --with-cups-include="$(xcrun --sdk macosx --show-sdk-path)/usr/include"
-  make CONF=iossim-aarch64-zero-release static-libs-image javafx.controls-java
+  make CONF=iossim-aarch64-zero-release javafx.controls-java javafx.fxml-java static-libs-image
   ([ $? -eq 0 ] && echo "success!") || (echo "failure!" && exit 1)
   cp "$root/mobile/build/iossim-aarch64-zero-release/jdk/include/ios/jni_md.h" "$root/mobile/build/iossim-aarch64-zero-release/jdk/include/"
 fi

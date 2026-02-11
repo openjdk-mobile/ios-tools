@@ -55,3 +55,12 @@ jobs:
         with:
           name: helloMobileApp
           path: app/build/Release/HelloMobileApp.xcarchive
+
+      - name: Notify Slack on failure
+        if: ${{ failure() || cancelled() }}
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+          -H 'Content-type: application/json' \
+          -d '{
+            "text": ":x: *Workflow ${{ github.workflow }} failed* in *${{ github.repository }}* on branch *${{ github.ref_name }}* by *${{ github.actor }}*."
+          }'

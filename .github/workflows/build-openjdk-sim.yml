@@ -36,43 +36,61 @@ jobs:
           echo "unzip done"
           echo "$(realpath ../support)"
 
+      - name: Patch and build OpenJFX sources
+        run: |
+          git clone https://github.com/openjdk/jfx.git
+          cd jfx
+
+          # temporary patches
+          git apply ../.github/patches/jfx-glass-patch.diff
+
+          sh gradlew shadersClasses
+          cd ..
+          jfxversion=$(grep "^[#]*\s*jfx.release.major.version" jfx/build.properties | cut -d'=' -f2)$(grep "^[#]*\s*jfx.release.suffix=" jfx/build.properties | cut -d'=' -f2)
+          echo "RUNTIME_VERSION=$jfxversion" >> $GITHUB_ENV
+
       - name: Clone OpenJDK Mobile sources
         run: |
-          git clone https://github.com/openjdk/mobile.git
-          cp openjdk-ext/src/hotspot/symbol_keeper.cpp mobile/src/hotspot/os/bsd
-          cd mobile
+          git clone https://github.com/openjdk-mobile/openjfx-build.git
           
-          # optionally checkout a specific branch or tag
-          git checkout master
+          git clone https://github.com/openjdk/mobile.git
+          cd mobile
+          patch -p1 < ../openjfx-build/openjdk-ext/src/jfx.patch
+          
+          # temporary patches
+          git apply ../.github/patches/lib-patch.diff
+          git apply ../.github/patches/version-patch.diff
+          
+          cp ../openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
           
           bash configure \
-          --with-conf-name=iossim-aarch64-zero-release \
-          --disable-warnings-as-errors \
-          --openjdk-target=aarch64-macos-ios \
-          --with-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk \
-          --with-libffi-include=$(realpath ../../support/include/ffi) \
-          --with-libffi-lib=$(realpath ../../support) \
-          --with-extra-cflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
-          --with-extra-cxxflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
-          --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
+            --with-conf-name=iossim-aarch64-zero-release \
+            --with-openjfx-modules=../jfx \
+            --disable-warnings-as-errors \
+            --openjdk-target=aarch64-macos-ios \
+            --with-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk \
+            --with-libffi-include=$(realpath ../../support/include/ffi) \
+            --with-libffi-lib=$(realpath ../../support) \
+            --with-extra-cflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
+            --with-extra-cxxflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
+            --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
           make LOG=cmdlines,info CONF=iossim-aarch64-zero-release static-libs-image
+          cp build/iossim-aarch64-zero-release/jdk/include/ios/jni_md.h build/iossim-aarch64-zero-release/jdk/include/
+          cd ..
+        env:
+          RUNTIME_VERSION: ${{ env.RUNTIME_VERSION }}
 
-      - name: Upload device artifact
+      - name: Upload simulator artifact
         uses: actions/upload-artifact@v4
         with:
-          name: libjvm-simulator
+          name: libs-simulator
           path: |
-            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a
-            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libjava.a
-            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libjimage.a
-            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libnet.a
-            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libnio.a
-            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib/libzip.a
+            mobile/build/iossim-aarch64-zero-release/images/static-libs/lib
             mobile/build/iossim-aarch64-zero-release/jdk/include
 
-      - name: Upload java.base
+      - name: Upload simulator modules
         uses: actions/upload-artifact@v4
         with:
-          name: java.base-simulator
+          name: java-modules-simulator
           path: |
-            mobile/build/iossim-aarch64-zero-release/jdk/modules/java.base
+            mobile/build/iossim-aarch64-zero-release/jdk/modules

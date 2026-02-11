@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
 
+local=${1:-"true"}
+sign=${2:-"false"}
+upload=${3:-"false"}
+
 root=$PWD/build
+localPath=$PWD/../local
+
 rm -rf build
 
 if type -p java; then
@@ -16,7 +22,7 @@ fi
 if [[ "$_java" ]]; then
     version=$(javap -verbose java.lang.String | grep "major version" | cut -d " " -f5)
     if [[ "$version" -lt "69" ]]; then
-        echo Error: JDK version is less than 25
+        echo Error: JDK version is lower than 25
         exit
     fi
 fi
@@ -46,26 +52,34 @@ sed -i '' "s/GET_CURRENT_VERSION/$CURRENT_VERSION/g" HelloMobileApp/project.xml
 cp helloworld/HelloWorld.jar HelloMobileApp/HelloMobileApp
 
 mkdir framework
-wget -nv -O framework/OpenJDK.xcframework.zip https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/OpenJDK.xcframework.zip
-unzip -q framework/OpenJDK.xcframework.zip -d framework
-rm framework/OpenJDK.xcframework.zip
+if [[ "$local" == true ]]; then
+  cp -R "$localPath/sdk/framework" .
+else
+  wget -nv -O framework/OpenJDK.xcframework.zip https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/OpenJDK.xcframework.zip
+  unzip -q framework/OpenJDK.xcframework.zip -d framework
+  rm framework/OpenJDK.xcframework.zip
+fi
 cp -R framework/OpenJDK.xcframework HelloMobileApp/HelloMobileApp
 
-mkdir -p lib
 mkdir -p HelloMobileApp/HelloMobileApp/lib/lib
-wget -nv -O lib/java_bundle-device.zip https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/java_bundle-device.zip
-unzip -q lib/java_bundle-device.zip -d lib
-rm lib/java_bundle-device.zip
-cp lib/java_bundle-device/lib/modules HelloMobileApp/HelloMobileApp/lib/lib/
+if [[ "$local" == true ]]; then
+  cp "$localPath/sdk/mobile/build/java_bundle/lib/modules" HelloMobileApp/HelloMobileApp/lib/lib/
+else
+  mkdir -p lib
+  wget -nv -O lib/java_bundle-device.zip https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/java_bundle-device.zip
+  unzip -q lib/java_bundle-device.zip -d lib
+  rm lib/java_bundle-device.zip
+  cp lib/java_bundle-device/lib/modules HelloMobileApp/HelloMobileApp/lib/lib/
+fi
 
 xcodegen generate --spec="$root/HelloMobileApp/project.xml" --project="$root/HelloMobileApp"
 
 echo "Archive project"
 cd HelloMobileApp || exit
-xcodebuild -project HelloMobileApp.xcodeproj -scheme HelloMobileApp -archivePath "$root/Release/HelloMobileApp.xcarchive" -configuration Release -destination 'generic/platform=iOS' archive
-if [[ $? != 0 ]]; then
-    echo "Xcode build archive failed"
-    exit 1
+if [[ "$sign" == true ]]; then
+  xcodebuild -project HelloMobileApp.xcodeproj -scheme HelloMobileApp -archivePath "$root/Release/HelloMobileApp.xcarchive" -configuration Release -destination 'generic/platform=iOS' archive
+else
+  xcodebuild CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -project HelloMobileApp.xcodeproj -scheme HelloMobileApp -archivePath "$root/Release/HelloMobileApp.xcarchive" -configuration Debug -destination 'generic/platform=iOS' archive
 fi
 
 if [[ ! -d "$root/Release/HelloMobileApp.xcarchive" ]]; then
@@ -76,17 +90,15 @@ cp "$root/../exportOptions.plist" "$root/Release/"
 sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" "$root/Release/exportOptions.plist"
 
 final_step() {
-    rm -rf "$root/HelloFXMobileApp/private_keys"
+    rm -rf "$root/HelloMobileApp/private_keys"
 }
 mkdir -p "$root/HelloMobileApp/private_keys"
 echo "$API_PRIVATE_KEY" >> "$root/HelloMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
-exit 1
 trap final_step EXIT
 
-echo "Export and upload ipa"
-xcodebuild -exportArchive -archivePath "$root/Release/HelloMobileApp.xcarchive" -exportPath "$root/Release/Archives/HelloMobileApp.ipa" -exportOptionsPlist "$root/Release/exportOptions.plist" -authenticationKeyID "$API_KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID" -authenticationKeyPath "$root/HelloMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
-if [[ $? != 0 ]]; then
-    echo "Xcode build upload failed"
-    exit 1
+if [[ "$sign" == true ]] && [[ "$upload" == true ]]; then
+  echo "Export and upload ipa"
+  xcodebuild -exportArchive -archivePath "$root/Release/HelloMobileApp.xcarchive" -exportPath "$root/Release/Archives/HelloMobileApp.ipa" -exportOptionsPlist "$root/Release/exportOptions.plist" -authenticationKeyID "$API_KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID" -authenticationKeyPath "$root/HelloMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
 fi
+
 cd ../..

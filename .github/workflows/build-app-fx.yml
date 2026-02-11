@@ -3,7 +3,7 @@ name: Build HelloFXMobileApp
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [ "Combine XCFramework FX" ]
+    workflows: [ "Combine XCFramework" ]
     types:
       - completed
 
@@ -41,8 +41,8 @@ jobs:
 
       - name: Run build script
         run: |
-          cd app
-          ./script.sh false true true
+          cd appFX
+          ./script.sh
         env:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
           CURRENT_VERSION: ${{ github.run_number }}
@@ -54,4 +54,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: helloFXMobileApp
-          path: app/build/Release/HelloFXMobileApp.xcarchive
+          path: appFX/build/Release/HelloFXMobileApp.xcarchive
+
+      - name: Notify Slack on failure
+        if: ${{ failure() || cancelled() }}
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+          -H 'Content-type: application/json' \
+          -d '{
+            "text": ":x: *Workflow ${{ github.workflow }} failed* in *${{ github.repository }}* on branch *${{ github.ref_name }}* by *${{ github.actor }}*."
+          }'

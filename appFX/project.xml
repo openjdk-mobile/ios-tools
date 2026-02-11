@@ -7,7 +7,7 @@ targets:
     platform: iOS
     deploymentTarget: "15.0"
     dependencies:
-      - framework: HelloFXMobileApp/OpenJDK-FX.xcframework
+      - framework: HelloFXMobileApp/OpenJDK.xcframework
         embed: false
         link: true
       - sdk: libz.tbd
@@ -15,7 +15,7 @@ targets:
       - path: HelloFXMobileApp
         excludes: 
           - "**/lib"
-          - "**/OpenJDK-FX.xcframework"
+          - "**/OpenJDK.xcframework"
       - path: HelloFXMobileApp/lib
         type: folder
         buildPhase:

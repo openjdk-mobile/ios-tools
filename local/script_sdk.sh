@@ -16,7 +16,7 @@ fi
 if [[ "$_java" ]]; then
     version=$(javap -verbose java.lang.String | grep "major version" | cut -d " " -f5)
     if [[ "$version" -lt "69" ]]; then
-        echo Error: JDK version is less than 25
+        echo Error: JDK version is lower than 25
         exit
     fi
 fi
@@ -49,7 +49,6 @@ fi
 if [[ ! -d "jfx" ]]; then
   git clone --depth 1 https://github.com/openjdk/jfx.git
   cd jfx || exit
-  git apply "$root/../../.github/patches/jfx-es2-patch.diff"
   git apply "$root/../../.github/patches/jfx-glass-patch.diff"
   sh gradlew shadersClasses
   cd ..
@@ -81,7 +80,6 @@ fi
 if [[ ! -d "$root/mobile/build/ios-aarch64-zero-release/images/static-libs/lib" ]];  then
   echo "========== iOS SDK ==========="
   cp "$root/../../openjdk-ext/src/hotspot/symbol_keeper.cpp" "$root/mobile/src/hotspot/os/bsd"
-  cp "$root/../../openjdk-ext/src/hotspot/symbol_fx_keeper.cpp" "$root/mobile/src/hotspot/os/bsd"
 
   bash configure \
       --with-conf-name=ios-aarch64-zero-release \
@@ -177,12 +175,12 @@ if [[ "$doSim" = true ]]; then
     -headers "$root/mobile/build/ios-aarch64-zero-release/jdk/include" \
     -library "$SIMULATOR_TARGET/libsimulator.a" \
     -headers "$root/mobile/build/iossim-aarch64-zero-release/jdk/include" \
-    -output framework/OpenJDK-FX.xcframework
+    -output framework/OpenJDK.xcframework
 else
   xcodebuild -create-xcframework \
     -library "$DEVICE_TARGET/libdevice.a" \
     -headers "$root/mobile/build/ios-aarch64-zero-release/jdk/include" \
-    -output framework/OpenJDK-FX.xcframework
+    -output framework/OpenJDK.xcframework
 fi
 
 echo "========== Done ==========="

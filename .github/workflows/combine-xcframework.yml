@@ -28,11 +28,11 @@ jobs:
           name: macos-jdk
           path: ./macos-jdk
 
-      - name: Download java.base for device
+      - name: Download java-modules for device
         uses: actions/download-artifact@v4
         with:
-          name: java.base-device
-          path: ./java.base-device/java.base
+          name: java-modules-device
+          path: ./java-modules-device
 
       - name: Create modules jimage for device
         run: |
@@ -40,20 +40,27 @@ jobs:
           chmod +x ./macos-jdk/bin/jlink
           
           mkdir jmods-device
-          ./macos-jdk/bin/jmod create --class-path ./java.base-device/java.base --target-platform ios-aarch64 jmods-device/java.base.jmod
-          ./macos-jdk/bin/jlink --module-path ./jmods-device --add-modules java.base --output java_bundle-device
+          module_names=("java.base" "java.desktop" "java.prefs" "java.xml" "java.datatransfer" "javafx.base" "javafx.graphics" "javafx.controls")
+          for item in "${module_names[@]}"; do
+            ./macos-jdk/bin/jmod create --class-path "./java-modules-device/$item" --target-platform ios-aarch64 "jmods-device/$item.jmod"
+          done
+          
+          ./macos-jdk/bin/jlink --module-path ./jmods-device --add-modules javafx.controls --output java_bundle-device
 
-      - name: Download java.base for simulator
+      - name: Download java-modules for simulator
         uses: actions/download-artifact@v4
         with:
-          name: java.base-simulator
-          path: ./java.base-simulator/java.base
+          name: java-modules-simulator
+          path: ./java-modules-simulator
 
       - name: Create modules jimage for simulator
         run: |
           mkdir jmods-simulator
-          ./macos-jdk/bin/jmod create --class-path ./java.base-simulator/java.base --target-platform ios-aarch64 jmods-simulator/java.base.jmod
-          ./macos-jdk/bin/jlink --module-path ./jmods-simulator --add-modules java.base --output java_bundle-simulator
+          module_names=("java.base" "java.desktop" "java.prefs" "java.xml" "java.datatransfer" "javafx.base" "javafx.graphics" "javafx.controls")
+          for item in "${module_names[@]}"; do
+            ./macos-jdk/bin/jmod create --class-path "./java-modules-simulator/$item" --target-platform ios-aarch64 "jmods-simulator/$item.jmod"
+          done
+          ./macos-jdk/bin/jlink --module-path ./jmods-simulator --add-modules javafx.controls --output java_bundle-simulator
 
       - name: Download and unzip mobile-support
         env:
@@ -66,13 +73,13 @@ jobs:
       - name: Download device artifact
         uses: actions/download-artifact@v4
         with:
-          name: libjvm-device
+          name: libs-device
           path: ./device
 
       - name: Download simulator artifact
         uses: actions/download-artifact@v4
         with:
-          name: libjvm-simulator
+          name: libs-simulator
           path: ./simulator
 
       - name: Create XCFramework
@@ -82,6 +89,7 @@ jobs:
 
       - name: Compress XCFramework and modules jimage
         run: |
+          zip -r macos-jdk.zip macos-jdk
           zip -r OpenJDK.xcframework.zip OpenJDK.xcframework
           zip -r java_bundle-device.zip java_bundle-device
           zip -r java_bundle-simulator.zip java_bundle-simulator
@@ -101,6 +109,16 @@ jobs:
           tag_name: snapshot
           prerelease: true
           files: |
+            macos-jdk.zip
             OpenJDK.xcframework.zip
             java_bundle-device.zip
             java_bundle-simulator.zip
+
+      - name: Notify Slack on failure
+        if: ${{ failure() || cancelled() }}
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+          -H 'Content-type: application/json' \
+          -d '{
+            "text": ":x: *Workflow ${{ github.workflow }} failed* in *${{ github.repository }}* on branch *${{ github.ref_name }}* by *${{ github.actor }}*."
+          }'

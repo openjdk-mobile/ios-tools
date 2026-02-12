@@ -62,6 +62,7 @@ if [[ ! -d "mobile" ]]; then
   patch -p1 < ../openjfx-build/openjdk-ext/src/jfx.patch
   git apply "$root/../../.github/patches/lib-patch.diff"
   git apply "$root/../../.github/patches/version-patch.diff"
+  git apply "$root/../../.github/patches/debug-ios-patch.diff"
   cd ..
 fi
 

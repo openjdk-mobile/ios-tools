@@ -1,7 +1,7 @@
 # Github Actions
 
 In order to make the components needed to run Java on iOS as reproducible and deterministic as possible, we use a 
-number of github actions that build those components based from source code only. In case dependencies are needed,
+number of GitHub actions that build those components based from source code only. In case dependencies are needed,
 we build those as well.
 
 The most important components are builds of [OpenJDK/mobile](https://github.com/openjdk/mobile) for iOS (both for
@@ -12,4 +12,7 @@ that does this job, which is documented [here](ga/ffi.md).
 
 Once the OpenJDK builds are ready, another workflow combines them into a framework, as documented [here](ga/xcframework.md).
 
-And finally, everything is combined and tested by building a mobile app, as documented [here](ga/app.md).
+And finally, everything is combined and tested by building two mobile apps, as documented [here](ga/app.md):
+
+- HelloMobile app, that shows how to use Java as part of a regular iOS native application, and 
+- HelloFXMobile app, that shows how to use JavaFX as UI for an iOS application, like any regular Java desktop application.

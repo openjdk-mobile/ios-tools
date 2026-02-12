@@ -2,7 +2,7 @@
 set -e
 
 root=$PWD/sdk
-doSim=true
+doSim=${1:-"true"}
 
 if type -p java; then
     _java=java

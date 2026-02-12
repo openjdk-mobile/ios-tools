@@ -32,14 +32,7 @@ cd build || exit
 
 mkdir helloworld
 cd helloworld || exit
-echo \
-'public class HelloWorld {
-
-    public static void main(String[] args) {
-        System.out.println("Hey, Hello World!!");
-    }
-}
-' > HelloWorld.java
+cp -r "$root/../sample/" .
 javac HelloWorld.java
 jar cf HelloWorld.jar HelloWorld.class
 cd ..

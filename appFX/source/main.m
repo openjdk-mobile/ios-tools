@@ -32,16 +32,19 @@ void* launchJava(void *unused) {
     NSString *classPathOption = [NSString stringWithFormat:@"-Djava.class.path=%@", classPath];
     fprintf(stderr, "bcp = %s\n", [classPathOption UTF8String]);
     options[0].optionString = strdup([classPathOption UTF8String]); // Adjust path as needed
-    options[1].optionString = strdup([@"--enable-native-access=javafx.graphics" UTF8String]);
-    options[2].optionString = strdup([@"-Dos.name=iOS" UTF8String]);
-    options[3].optionString = strdup([@"-Djavafx.platform=iOS" UTF8String]);
-    options[4].optionString = strdup([@"-Dprism.order=es2" UTF8String]);
+    options[1].optionString = strdup([@"-Dos.name=iOS" UTF8String]);
+    options[2].optionString = strdup([@"-Djavafx.platform=iOS" UTF8String]);
+    options[3].optionString = strdup([@"-Dprism.order=es2" UTF8String]);
+    options[4].optionString = strdup([@"--enable-native-access=javafx.graphics" UTF8String]);
     vm_args.version = JNI_VERSION_1_8; // needed to initialize JavaVM
     vm_args.nOptions = 5;
     vm_args.options = options;
     loadfunctions();
     fprintf(stderr, "Create JavaVM\n");
     jint res = JNI_CreateJavaVM(&jvm, (void **)&env, &vm_args);
+    for (int i = 0; i < vm_args.nOptions; i++) {
+        free(options[i].optionString);
+    }
     if (res != JNI_OK) {
         fprintf(stderr, "Failed to create JVM\n");
     } else {

@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     JavaVM *jvm;
     JNIEnv *env;
     JavaVMInitArgs vm_args;
-    JavaVMOption options[2];
+    JavaVMOption options[1];
     fprintf(stderr, "starting main\n");
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     
@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
     loadfunctions();
     fprintf(stderr, "Create JavaVM\n");
     jint res = JNI_CreateJavaVM(&jvm, (void **)&env, &vm_args);
+    free(options[0].optionString);
     if (res != JNI_OK) {
         fprintf(stderr, "Failed to create JVM\n");
     } else {

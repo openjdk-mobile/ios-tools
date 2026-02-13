@@ -34,7 +34,7 @@ if [[ ! -d "libffi" ]]; then
   unzip -q libffi/libffi-ios.zip -d libffi
   rm libffi/libffi-ios.zip
 fi
-if [[ "$doSim" = true ]] && [[ ! -d "libffi-sim" ]]; then
+if [[ "$doSim" == true ]] && [[ ! -d "libffi-sim" ]]; then
   echo "========== FFI Sim ==========="
   mkdir libffi-sim
   wget -nv -O libffi-sim/libffi-ios-sim.zip https://github.com/openjdk-mobile/ios-tools/releases/download/libffi-build/libffi-ios-sim.zip
@@ -53,6 +53,10 @@ if [[ ! -d "jfx" ]]; then
   cd ..
 fi
 jfxversion=$(grep "^[#]*\s*jfx.release.major.version" jfx/build.properties | cut -d'=' -f2)$(grep "^[#]*\s*jfx.release.suffix=" jfx/build.properties | cut -d'=' -f2)
+if [[ -z "$jfxversion" ]]; then
+  echo "Error: Failed to extract JavaFX version";
+  jfxversion="unknown"
+fi
 export RUNTIME_VERSION=$jfxversion
 
 if [[ ! -d "mobile" ]]; then
@@ -72,7 +76,6 @@ if [[ ! -f "$root/mobile/build/jfx/images/jdk/bin/jmod" ]];  then
               --with-boot-jdk=$JAVA_HOME \
               --disable-warnings-as-errors
   make CONF=jfx images
-  ([ $? -eq 0 ] && echo "success!") || (echo "failure!" && exit 1)
 fi
 
 if [[ ! -d "$root/mobile/build/ios-aarch64-zero-release/images/static-libs/lib" ]];  then
@@ -89,11 +92,10 @@ if [[ ! -d "$root/mobile/build/ios-aarch64-zero-release/images/static-libs/lib" 
       --with-libffi-lib=$root/libffi  \
       --with-cups-include="$(xcrun --sdk macosx --show-sdk-path)/usr/include"
   make CONF=ios-aarch64-zero-release javafx.controls-java javafx.fxml-java static-libs-image
-  ([ $? -eq 0 ] && echo "success!") || (echo "failure!" && exit 1)
   cp "$root/mobile/build/ios-aarch64-zero-release/jdk/include/ios/jni_md.h" "$root/mobile/build/ios-aarch64-zero-release/jdk/include/"
 fi
 
-if [[ "$doSim" = true ]] && [[ ! -d "$root/mobile/build/iossim-aarch64-zero-release/images/static-libs/lib" ]]; then
+if [[ "$doSim" == true ]] && [[ ! -d "$root/mobile/build/iossim-aarch64-zero-release/images/static-libs/lib" ]]; then
   echo "========== iOS-Sim SDK ==========="
   bash configure \
       --with-conf-name=iossim-aarch64-zero-release \
@@ -107,7 +109,6 @@ if [[ "$doSim" = true ]] && [[ ! -d "$root/mobile/build/iossim-aarch64-zero-rele
       --with-extra-cxxflags="-target arm64-apple-ios-simulator -mios-simulator-version-min=18.2" \
       --with-cups-include="$(xcrun --sdk macosx --show-sdk-path)/usr/include"
   make CONF=iossim-aarch64-zero-release javafx.controls-java javafx.fxml-java static-libs-image
-  ([ $? -eq 0 ] && echo "success!") || (echo "failure!" && exit 1)
   cp "$root/mobile/build/iossim-aarch64-zero-release/jdk/include/ios/jni_md.h" "$root/mobile/build/iossim-aarch64-zero-release/jdk/include/"
 fi
 cd ..
@@ -145,15 +146,15 @@ libtool -static -o libdevice.a libjvm.a libffi.a libjava.a libzip.a libnet.a lib
   libglass.a libjavafx_font.a libjavafx_iio.a libprism_common.a libprism_es2.a
 cd ..
 
-if [[ "$doSim" = true ]]; then
+if [[ "$doSim" == true ]]; then
   echo "========== libsimulator.a ==========="
   SIMULATOR_TARGET=./simulator-static
 
-  if [ ! -d "$SIMULATOR_TARGET" ]; then
+  if [[ ! -d "$SIMULATOR_TARGET" ]]; then
     mkdir $SIMULATOR_TARGET
   fi
   cd $SIMULATOR_TARGET || exit
-  if [ -f "$SIMULATOR_TARGET/libsimulator.a" ]; then
+  if [[ -f "$SIMULATOR_TARGET/libsimulator.a" ]]; then
     rm libsimulator.a
   fi
   cp "$root/libffi-sim/libffi.a" .
@@ -167,7 +168,7 @@ fi
 echo "========== Framework ==========="
 rm -rf framework
 mkdir framework
-if [[ "$doSim" = true ]]; then
+if [[ "$doSim" == true ]]; then
   xcodebuild -create-xcframework \
     -library "$DEVICE_TARGET/libdevice.a" \
     -headers "$root/mobile/build/ios-aarch64-zero-release/jdk/include" \

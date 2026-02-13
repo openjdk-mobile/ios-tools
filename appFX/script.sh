@@ -32,7 +32,7 @@ cd build || exit
 
 if [[ "$local" == false ]]; then
   mkdir jdk
-  wget -nv -O jdk/macos-jdk.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/macos-jdk.zip
+  wget -nv -O jdk/macos-jdk.zip https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/macos-jdk.zip
   unzip -q jdk/macos-jdk.zip -d jdk
   rm jdk/macos-jdk.zip
   chmod +x jdk/macos-jdk/bin/javac
@@ -62,7 +62,7 @@ mkdir framework
 if [[ "$local" == true ]]; then
   cp -R "$localPath/sdk/framework" .
 else
-  wget -nv -O framework/OpenJDK.xcframework.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/OpenJDK.xcframework.zip
+  wget -nv -O framework/OpenJDK.xcframework.zip https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/OpenJDK.xcframework.zip
   unzip -q framework/OpenJDK.xcframework.zip -d framework
   rm framework/OpenJDK.xcframework.zip
 fi
@@ -74,7 +74,7 @@ if [[ "$local" == true ]]; then
   cp "$localPath/sdk/mobile/build/jfx/images/jdk/lib/tzdb.dat" HelloFXMobileApp/HelloFXMobileApp/lib/lib/
 else
   mkdir -p lib
-  wget -nv -O lib/java_bundle-device.zip https://github.com/jperedadnr/ios-tools/releases/download/snapshot/java_bundle-device.zip
+  wget -nv -O lib/java_bundle-device.zip https://github.com/openjdk-mobile/ios-tools/releases/download/snapshot/java_bundle-device.zip
   unzip -q lib/java_bundle-device.zip -d lib
   rm lib/java_bundle-device.zip
   cp lib/java_bundle-device/lib/modules HelloFXMobileApp/HelloFXMobileApp/lib/lib/

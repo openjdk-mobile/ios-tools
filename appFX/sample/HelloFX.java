@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 
 public class HelloFX extends Application {
 
+    @Override
     public void start(Stage stage) {
         System.out.println("StartFX");
         String javaVersion = System.getProperty("java.version");

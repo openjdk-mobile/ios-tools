@@ -10,4 +10,4 @@ When using libraries instead of a framework, the typical solution is to use `-Wl
 ## TODO
 
 - how do we (re-)enable building mappings for the classlibs in OpenJDK/mobile (this needs a JBS issue)
-- how do we use such a mapping when building an iOS framework (see [script](/.github/scripts/build-xcframework.sh) and [workflow](/.github/scripts/build-xcframework.sh))
+- how do we use such a mapping when building an iOS framework (see [script](/.github/scripts/build-xcframework.sh) and [workflow](/.github/workflows/combine-xcframework.yml))

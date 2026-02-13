@@ -44,6 +44,10 @@ jobs:
           sh gradlew shadersClasses
           cd ..
           jfxversion=$(grep "^[#]*\s*jfx.release.major.version" jfx/build.properties | cut -d'=' -f2)$(grep "^[#]*\s*jfx.release.suffix=" jfx/build.properties | cut -d'=' -f2)
+          if [ -z "$jfxversion" ]; then
+            echo "Error: Failed to extract JavaFX version from build.properties"
+            jfxversion="unknown"
+          fi
           echo "RUNTIME_VERSION=$jfxversion" >> $GITHUB_ENV
 
       - name: Clone OpenJDK Mobile sources

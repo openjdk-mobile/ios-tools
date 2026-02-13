@@ -41,9 +41,6 @@ jobs:
           git clone https://github.com/openjdk/jfx.git
           cd jfx
 
-          # temporary patches
-          git apply ../.github/patches/jfx-glass-patch.diff
-
           sh gradlew shadersClasses
           cd ..
           jfxversion=$(grep "^[#]*\s*jfx.release.major.version" jfx/build.properties | cut -d'=' -f2)$(grep "^[#]*\s*jfx.release.suffix=" jfx/build.properties | cut -d'=' -f2)
@@ -56,10 +53,6 @@ jobs:
           git clone https://github.com/openjdk/mobile.git
           cd mobile
           patch -p1 < ../openjfx-build/openjdk-ext/src/jfx.patch
-          
-          # temporary patches
-          git apply ../.github/patches/lib-patch.diff
-          git apply ../.github/patches/version-patch.diff
           
           cp ../openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
           

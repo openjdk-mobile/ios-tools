@@ -49,7 +49,6 @@ fi
 if [[ ! -d "jfx" ]]; then
   git clone --depth 1 https://github.com/openjdk/jfx.git
   cd jfx || exit
-  git apply "$root/../../.github/patches/jfx-glass-patch.diff"
   sh gradlew shadersClasses
   cd ..
 fi
@@ -60,8 +59,6 @@ if [[ ! -d "mobile" ]]; then
   git clone --depth 1 https://github.com/openjdk/mobile/
   cd mobile || exit
   patch -p1 < ../openjfx-build/openjdk-ext/src/jfx.patch
-  git apply "$root/../../.github/patches/lib-patch.diff"
-  git apply "$root/../../.github/patches/version-patch.diff"
   git apply "$root/../../.github/patches/debug-ios-patch.diff"
   cd ..
 fi

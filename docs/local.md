@@ -20,7 +20,7 @@ This script does the following steps:
 - download `libffi`, 
 - clone OpenJDK/OpenJFX and OpenJDK/Mobile repositories
 - build the SDK with JavaFX for macOS
-- build the Java and JavaFX static libraries for iOS
+- build the Java and JavaFX static libraries for iOS, with debug logs enabled
 - create the `modules` file that packages all the Java modules
 - create the `OpenJDK.xcframework`
 

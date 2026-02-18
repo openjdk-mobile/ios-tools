@@ -1,6 +1,68 @@
 #!/bin/bash
 set -e
 
+# Show help message
+show_help() {
+    cat << EOF
+Usage: ./script_sdk.sh [doSim]
+
+This scripts builds OpenJDK Mobile SDK with JavaFX for desktop, and also for iOS when running from macOS.
+
+Arguments:
+  doSim   Build iOS simulator SDK in addition to device SDK (true/false)
+          Default: true
+          Note: Simulator build only works on macOS
+
+Examples:
+  ./script_sdk.sh           # Build for device and simulator (macOS only)
+  ./script_sdk.sh true      # Build for device and simulator (macOS only)
+  ./script_sdk.sh false     # Build for device only (macOS only)
+
+Platform Support:
+  macOS   - Full build: JDK with JavaFX + iOS device + iOS simulator SDKs
+  Windows - Partial build: JDK with JavaFX only (no iOS builds)
+  Linux   - Partial build: JDK with JavaFX only (no iOS builds)
+
+Required Environment Variables:
+  JAVA_HOME   Path to JDK 25 or later (bootstrap JDK)
+
+Prerequisites:
+  macOS:
+    - Xcode with command line tools
+    - JDK 25 or later
+
+  Windows (MSYS2/Git Bash):
+    - Git Bash or MSYS2
+    - JDK 25 or later
+
+  Linux:
+    - JDK 25 or later
+
+Output:
+  sdk/libffi                                                        - Downloaded libffi for iOS device builds (macOS only)
+  sdk/libffi-sim                                                    - Downloaded libffi for iOS simulator builds (macOS only)
+  sdk/openjdk-build                                                 - Clone of the OpenJDK-Mobile/openjfx-build repository
+  sdk/jfx                                                           - Clone of the OpenJFX repository
+  sdk/mobile                                                        - Clone of the OpenJDK Mobile repository
+  sdk/mobile/build/jfx/images/jdk/                                  - Full JDK with JavaFX for desktop
+  sdk/mobile/build/ios-aarch64-zero-release/jdk/modules             - JDK modules for iOS (macOS only)
+  sdk/mobile/build/ios-aarch64-zero-release/images/static-libs      - Native libraries for iOS (macOS only)
+  sdk/mobile/build/iossim-aarch64-zero-release/jdk/modules          - JDK modules for iOS simulator (macOS only)
+  sdk/mobile/build/iossim-aarch64-zero-release/images/static-libs   - Native libraries for iOS simulator (macOS only)
+  sdk/mobile/build/java_bundle/                                     - iOS module bundle (macOS only)
+  sdk/device-static/libdevice.a                                     - Native library for the iOS framework (macOS only)
+  sdk/simulator-static/libsimulator.a                               - Native library for the iOS framework (macOS only)
+  sdk/framework/OpenJDK.xcframework/                                - iOS framework for iOS and iOS simulator (macOS only)
+
+EOF
+    exit 0
+}
+
+# Check for help flag
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    show_help
+fi
+
 root=$PWD/sdk
 doSim=${1:-"true"}
 

@@ -52,7 +52,7 @@ jobs:
           cd mobile
           
           # optionally checkout a specific branch or tag
-          git checkout -- "${{ inputs.mobile_branch }}"
+          git checkout "${{ inputs.mobile_branch }}"
           
           bash configure \
           --with-conf-name=iossim-aarch64-zero-release \

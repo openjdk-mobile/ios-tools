@@ -17,9 +17,15 @@ on:
 jobs:
   build-openjdk:
     uses: ./.github/workflows/build-openjdk.yml
+    with:
+      mobile_repo: ${{ inputs.mobile_repo || 'https://github.com/openjdk/mobile.git' }}
+      mobile_branch: ${{ inputs.mobile_branch || 'master' }}
 
   build-openjdk-sim:
     uses: ./.github/workflows/build-openjdk-sim.yml
+    with:
+      mobile_repo: ${{ inputs.mobile_repo || 'https://github.com/openjdk/mobile.git' }}
+      mobile_branch: ${{ inputs.mobile_branch || 'master' }}
 
   build-openjdk-macos:
     uses: ./.github/workflows/build-openjdk-macos.yml

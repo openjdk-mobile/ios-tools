@@ -2,6 +2,15 @@ name: Build OpenJDK Mobile
 
 on:
   workflow_call:
+    inputs:
+      mobile_repo:
+        description: 'URL of the OpenJDK Mobile repository to clone'
+        type: string
+        default: 'https://github.com/openjdk/mobile.git'
+      mobile_branch:
+        description: 'Branch of the OpenJDK Mobile repository to build'
+        type: string
+        default: 'master'
 
 jobs:
   build:
@@ -38,11 +47,11 @@ jobs:
 
       - name: Clone OpenJDK Mobile sources
         run: |
-          git clone https://github.com/openjdk/mobile.git
+          git clone -- "${{ inputs.mobile_repo }}" mobile
           cp openjdk-ext/src/hotspot/symbol_keeper.cpp mobile/src/hotspot/os/bsd
           cd mobile
           # optionally checkout a specific branch or tag
-          git checkout master
+          git checkout -- "${{ inputs.mobile_branch }}"
           
           bash configure \
           --with-conf-name=ios-aarch64-zero-release \

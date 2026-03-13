@@ -4,6 +4,15 @@ on:
   schedule:
     - cron: '0 3 * * *' # run at 3 AM UTC
   workflow_dispatch:
+    inputs:
+      mobile_repo:
+        description: 'URL of the OpenJDK Mobile repository to clone'
+        type: string
+        default: 'https://github.com/openjdk/mobile.git'
+      mobile_branch:
+        description: 'Branch of the OpenJDK Mobile repository to build'
+        type: string
+        default: 'master'
 
 jobs:
   build-openjdk:
@@ -14,6 +23,9 @@ jobs:
 
   build-openjdk-macos:
     uses: ./.github/workflows/build-openjdk-macos.yml
+    with:
+      mobile_repo: ${{ inputs.mobile_repo || 'https://github.com/openjdk/mobile.git' }}
+      mobile_branch: ${{ inputs.mobile_branch || 'master' }}
 
   combine:
     needs: [ build-openjdk, build-openjdk-sim, build-openjdk-macos ]

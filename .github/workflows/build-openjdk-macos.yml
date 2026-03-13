@@ -2,6 +2,15 @@ name: Build OpenJDK Mobile for macOS
 
 on:
   workflow_call:
+    inputs:
+      mobile_repo:
+        description: 'URL of the OpenJDK Mobile repository to clone'
+        type: string
+        default: 'https://github.com/openjdk/mobile.git'
+      mobile_branch:
+        description: 'Branch of the OpenJDK Mobile repository to build'
+        type: string
+        default: 'master'
 
 jobs:
   build:
@@ -27,8 +36,9 @@ jobs:
 
       - name: Patch and build OpenJDK Mobile sources
         run: |
-          git clone https://github.com/openjdk/mobile.git
+          git clone ${{ inputs.mobile_repo }} mobile
           cd mobile
+          git checkout ${{ inputs.mobile_branch }}
           
           bash configure \
             --with-conf-name=macos-aarch64 \

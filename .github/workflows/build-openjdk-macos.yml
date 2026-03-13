@@ -36,9 +36,9 @@ jobs:
 
       - name: Patch and build OpenJDK Mobile sources
         run: |
-          git clone ${{ inputs.mobile_repo }} mobile
+          git clone -- "${{ inputs.mobile_repo }}" mobile
           cd mobile
-          git checkout ${{ inputs.mobile_branch }}
+          git checkout -- "${{ inputs.mobile_branch }}"
           
           bash configure \
             --with-conf-name=macos-aarch64 \

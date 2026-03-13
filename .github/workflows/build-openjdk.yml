@@ -51,7 +51,7 @@ jobs:
           cp openjdk-ext/src/hotspot/symbol_keeper.cpp mobile/src/hotspot/os/bsd
           cd mobile
           # optionally checkout a specific branch or tag
-          git checkout -- "${{ inputs.mobile_branch }}"
+          git checkout "${{ inputs.mobile_branch }}"
           
           bash configure \
           --with-conf-name=ios-aarch64-zero-release \

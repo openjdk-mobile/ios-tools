@@ -35,10 +35,13 @@ jobs:
           distribution: 'temurin'
 
       - name: Patch and build OpenJDK Mobile sources
+        env:
+          MOBILE_REPO: ${{ inputs.mobile_repo }}
+          MOBILE_BRANCH: ${{ inputs.mobile_branch }}
         run: |
-          git clone -- "${{ inputs.mobile_repo }}" mobile
+          git clone -- "$MOBILE_REPO" mobile
           cd mobile
-          git checkout "${{ inputs.mobile_branch }}"
+          git checkout "$MOBILE_BRANCH"
           
           bash configure \
             --with-conf-name=macos-aarch64 \

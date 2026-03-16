@@ -46,13 +46,14 @@ jobs:
           echo "$(realpath ../support)"
 
       - name: Clone OpenJDK Mobile sources
+        env:
+          MOBILE_REPO: ${{ inputs.mobile_repo }}
+          MOBILE_BRANCH: ${{ inputs.mobile_branch }}
         run: |
-          git clone -- "${{ inputs.mobile_repo }}" mobile
-          cp openjdk-ext/src/hotspot/symbol_keeper.cpp mobile/src/hotspot/os/bsd
+          git clone -- "$MOBILE_REPO" mobile
           cd mobile
-          
-          # optionally checkout a specific branch or tag
-          git checkout "${{ inputs.mobile_branch }}"
+          git checkout "$MOBILE_BRANCH"
+          cp ../openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
           
           bash configure \
           --with-conf-name=iossim-aarch64-zero-release \

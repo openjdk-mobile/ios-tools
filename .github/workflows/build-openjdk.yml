@@ -49,7 +49,7 @@ jobs:
         env:
           MOBILE_REPO: ${{ inputs.mobile_repo }}
           MOBILE_REF: ${{ inputs.mobile_ref }}
-        run: 
+        run: |
           git clone -- "$MOBILE_REPO" mobile
           cd mobile
           git checkout "$MOBILE_REF"

@@ -4,32 +4,50 @@ on:
   schedule:
     - cron: '0 3 * * *' # run at 3 AM UTC
   workflow_dispatch:
+    inputs:
+      mobile_repo:
+        description: 'URL of the OpenJDK Mobile repository to clone'
+        type: string
+        default: 'https://github.com/openjdk/mobile.git'
+      mobile_ref:
+        description: 'Branch, tag or commit hash of the OpenJDK Mobile repository to checkout'
+        type: string
+        default: 'master'
 
 jobs:
   build-openjdk:
     uses: ./.github/workflows/build-openjdk.yml
+    with:
+      mobile_repo: ${{ inputs.mobile_repo || 'https://github.com/openjdk/mobile.git' }}
+      mobile_ref: ${{ inputs.mobile_ref || 'master' }}
 
   build-openjdk-sim:
     uses: ./.github/workflows/build-openjdk-sim.yml
+    with:
+      mobile_repo: ${{ inputs.mobile_repo || 'https://github.com/openjdk/mobile.git' }}
+      mobile_ref: ${{ inputs.mobile_ref || 'master' }}
 
   build-openjdk-macos:
     uses: ./.github/workflows/build-openjdk-macos.yml
+    with:
+      mobile_repo: ${{ inputs.mobile_repo || 'https://github.com/openjdk/mobile.git' }}
+      mobile_ref: ${{ inputs.mobile_ref || 'master' }}
 
   combine:
     needs: [ build-openjdk, build-openjdk-sim, build-openjdk-macos ]
     runs-on: macos-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download JDK for macOS
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: macos-jdk
           path: ./macos-jdk
 
       - name: Download java-modules for device
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: java-modules-device
           path: ./java-modules-device
@@ -48,7 +66,7 @@ jobs:
           ./macos-jdk/bin/jlink --module-path ./jmods-device --add-modules javafx.controls --output java_bundle-device
 
       - name: Download java-modules for simulator
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: java-modules-simulator
           path: ./java-modules-simulator
@@ -71,13 +89,13 @@ jobs:
           unzip libffi-ios-sim.zip -d libffi-ios-sim
 
       - name: Download device artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: libs-device
           path: ./device
 
       - name: Download simulator artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: libs-simulator
           path: ./simulator
@@ -95,7 +113,7 @@ jobs:
           zip -r java_bundle-simulator.zip java_bundle-simulator
 
       - name: Upload XCFramework and modules jimage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: |
             ./OpenJDK.xcframework

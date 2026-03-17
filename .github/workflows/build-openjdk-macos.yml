@@ -7,8 +7,8 @@ on:
         description: 'URL of the OpenJDK Mobile repository to clone'
         type: string
         default: 'https://github.com/openjdk/mobile.git'
-      mobile_branch:
-        description: 'Branch of the OpenJDK Mobile repository to build'
+      mobile_ref:
+        description: 'Branch, tag or commit hash of the OpenJDK Mobile repository to checkout'
         type: string
         default: 'master'
 
@@ -37,11 +37,11 @@ jobs:
       - name: Patch and build OpenJDK Mobile sources
         env:
           MOBILE_REPO: ${{ inputs.mobile_repo }}
-          MOBILE_BRANCH: ${{ inputs.mobile_branch }}
-        run: |
+          MOBILE_REF: ${{ inputs.mobile_ref }}
+        run: 
           git clone -- "$MOBILE_REPO" mobile
           cd mobile
-          git checkout "$MOBILE_BRANCH"
+          git checkout "$MOBILE_REF"
           
           bash configure \
             --with-conf-name=macos-aarch64 \

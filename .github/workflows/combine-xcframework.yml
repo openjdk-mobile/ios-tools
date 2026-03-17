@@ -9,8 +9,8 @@ on:
         description: 'URL of the OpenJDK Mobile repository to clone'
         type: string
         default: 'https://github.com/openjdk/mobile.git'
-      mobile_branch:
-        description: 'Branch of the OpenJDK Mobile repository to build'
+      mobile_ref:
+        description: 'Branch, tag or commit hash of the OpenJDK Mobile repository to checkout'
         type: string
         default: 'master'
 
@@ -19,19 +19,19 @@ jobs:
     uses: ./.github/workflows/build-openjdk.yml
     with:
       mobile_repo: ${{ inputs.mobile_repo || 'https://github.com/openjdk/mobile.git' }}
-      mobile_branch: ${{ inputs.mobile_branch || 'master' }}
+      mobile_ref: ${{ inputs.mobile_ref || 'master' }}
 
   build-openjdk-sim:
     uses: ./.github/workflows/build-openjdk-sim.yml
     with:
       mobile_repo: ${{ inputs.mobile_repo || 'https://github.com/openjdk/mobile.git' }}
-      mobile_branch: ${{ inputs.mobile_branch || 'master' }}
+      mobile_ref: ${{ inputs.mobile_ref || 'master' }}
 
   build-openjdk-macos:
     uses: ./.github/workflows/build-openjdk-macos.yml
     with:
       mobile_repo: ${{ inputs.mobile_repo || 'https://github.com/openjdk/mobile.git' }}
-      mobile_branch: ${{ inputs.mobile_branch || 'master' }}
+      mobile_ref: ${{ inputs.mobile_ref || 'master' }}
 
   combine:
     needs: [ build-openjdk, build-openjdk-sim, build-openjdk-macos ]

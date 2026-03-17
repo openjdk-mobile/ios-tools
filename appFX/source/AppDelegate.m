@@ -1,4 +1,7 @@
 #import "AppDelegate.h"
+#import <pthread.h>
+
+void *launchJava(void *unused);
 
 @interface AppDelegate ()
 
@@ -9,9 +12,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [self performSelectorInBackground:@selector(startJava:) withObject:launchOptions];
     return YES;
 }
 
+-(void)startJava:(NSDictionary *)launchOptions {
+    pthread_t thread;
+    pthread_create(&thread, NULL, launchJava, NULL);
+    pthread_detach(thread);
+}
 
 #pragma mark - UISceneSession lifecycle
 

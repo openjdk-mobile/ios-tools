@@ -45,56 +45,57 @@ jobs:
           echo "unzip done"
           echo "$(realpath ../support)"
 
-      - name: Clone OpenJDK Mobile sources
-        env:
-          MOBILE_REPO: ${{ inputs.mobile_repo }}
-          MOBILE_REF: ${{ inputs.mobile_ref }}
+      - name: Patch and build OpenJFX sources
         run: |
+          git clone https://github.com/openjdk/jfx.git
+          cd jfx
+          
+          sh gradlew shadersClasses
+          jfxversion=$(grep "^[#]*\s*jfx.release.major.version" build.properties | cut -d'=' -f2)$(grep "^[#]*\s*jfx.release.suffix=" build.properties | cut -d'=' -f2)
+          if [ -z "$jfxversion" ]; then
+            echo "Error: Failed to extract JavaFX version from build.properties"
+            jfxversion="unknown"
+          fi
+          echo "RUNTIME_VERSION=$jfxversion" >> $GITHUB_ENV
+
+      - name: Patch and build OpenJDK Mobile sources
+        run: |
+          git clone https://github.com/openjdk-mobile/openjfx-build.git
+          
           git clone -- "$MOBILE_REPO" mobile
           cd mobile
           git checkout "$MOBILE_REF"
+          patch -p1 < ../openjfx-build/openjdk-ext/src/jfx.patch
+          
           cp ../openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
           
           bash configure \
-          --with-conf-name=ios-aarch64-zero-release \
-          --disable-warnings-as-errors \
-          --openjdk-target=aarch64-macos-ios \
-          --with-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk \
-          --with-libffi-include=$(realpath ../../support/include/ffi) \
-          --with-libffi-lib=$(realpath ../../support) \
-          --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
-          make LOG=cmdlines,info CONF=ios-aarch64-zero-release static-libs-image
-
-      - name: List current directory
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -la
-
-      - name: List mobile directory
-        run: |
-          if [ -d "mobile" ]; then
-            echo "'mobile' directory exists, listing contents:"
-            ls -la mobile
-          else
-            echo "'mobile' directory does not exist!"
-          fi
+            --with-conf-name=ios-aarch64-zero-release \
+            --with-openjfx-modules=../jfx \
+            --disable-warnings-as-errors \
+            --openjdk-target=aarch64-macos-ios \
+            --with-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk \
+            --with-libffi-include=$(realpath ../../support/include/ffi) \
+            --with-libffi-lib=$(realpath ../../support) \
+            --with-cups-include=$(xcrun --sdk macosx --show-sdk-path)/usr/include
+          make LOG=cmdlines,info CONF=ios-aarch64-zero-release javafx.controls-java javafx.fxml-java static-libs-image
+          cp build/ios-aarch64-zero-release/jdk/include/ios/jni_md.h build/ios-aarch64-zero-release/jdk/include/
+        env:
+          RUNTIME_VERSION: ${{ env.RUNTIME_VERSION }}
+          MOBILE_REPO: ${{ inputs.mobile_repo }}
+          MOBILE_REF: ${{ inputs.mobile_ref }}
 
       - name: Upload device artifact
         uses: actions/upload-artifact@v7
         with:
-          name: libjvm-device
+          name: libs-device
           path: |
-            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/zero/libjvm.a
-            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libjava.a
-            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libjimage.a
-            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libnet.a
-            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libnio.a
-            mobile/build/ios-aarch64-zero-release/images/static-libs/lib/libzip.a
+            mobile/build/ios-aarch64-zero-release/images/static-libs/lib
             mobile/build/ios-aarch64-zero-release/jdk/include
 
-      - name: Upload java.base
+      - name: Upload device modules
         uses: actions/upload-artifact@v7
         with:
-          name: java.base-device
+          name: java-modules-device
           path: |
-            mobile/build/ios-aarch64-zero-release/jdk/modules/java.base
+            mobile/build/ios-aarch64-zero-release/jdk/modules

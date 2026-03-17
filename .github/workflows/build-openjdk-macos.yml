@@ -34,24 +34,35 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
-      - name: Patch and build OpenJDK Mobile sources
-        env:
-          MOBILE_REPO: ${{ inputs.mobile_repo }}
-          MOBILE_REF: ${{ inputs.mobile_ref }}
+      - name: Build OpenJFX sources
         run: |
+          git clone https://github.com/openjdk/jfx.git
+          cd jfx
+          sh gradlew shadersClasses
+          cd ..
+
+      - name: Patch and build OpenJDK Mobile sources
+        run: |
+          git clone https://github.com/openjdk-mobile/openjfx-build.git
+          
           git clone -- "$MOBILE_REPO" mobile
           cd mobile
           git checkout "$MOBILE_REF"
+          patch -p1 < ../openjfx-build/openjdk-ext/src/jfx.patch
           
           bash configure \
-            --with-conf-name=macos-aarch64 \
+            --with-conf-name=jfx \
+            --with-openjfx-modules=../jfx \
             --with-boot-jdk=$JAVA_HOME \
             --disable-warnings-as-errors
-          make LOG=cmdlines,info CONF=macos-aarch64 jdk-image
+          make LOG=cmdlines,info CONF=jfx images
+        env:
+          MOBILE_REPO: ${{ inputs.mobile_repo }}
+          MOBILE_REF: ${{ inputs.mobile_ref }}
 
       - name: Upload macOS JDK
         uses: actions/upload-artifact@v7
         with:
           name: macos-jdk
           path: |
-            mobile/build/macos-aarch64/images/jdk
+            mobile/build/jfx/images/jdk

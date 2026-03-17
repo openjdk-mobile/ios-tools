@@ -1,0 +1,12 @@
+diff --git a/make/modules/javafx.graphics/Lib.gmk b/make/modules/javafx.graphics/Lib.gmk
+index 60e79743506..59de9cdb1af 100644
+--- a/make/modules/javafx.graphics/Lib.gmk
++++ b/make/modules/javafx.graphics/Lib.gmk
+@@ -99,6 +99,7 @@ $(eval $(call SetupJdkLibrary, BUILD_LIBGLASS, \
+     LIBS_windows := -manifest -dynamicbase -nxcompat delayimp.lib gdi32.lib urlmon.lib Comdlg32.lib winmm.lib imm32.lib shell32.lib Uiautomationcore.lib dwmapi.lib version.lib /DELAYLOAD:user32.dll /DELAYLOAD:urlmon.dll /DELAYLOAD:winmm.dll /DELAYLOAD:shell32.dll /DELAYLOAD:Uiautomationcore.dll /DELAYLOAD:dwmapi.dll /DELAYLOAD:version.dll, \
+     EXTRA_FILES := $(EXTRA_GLASS_SRC), \
+     CFLAGS_macosx := -DMACOS_MIN_VERSION_MAJOR=11 -DMACOS_MIN_VERSION_MINOR=0, \
++    CFLAGS_ios := -DMAT_IOS_DEBUG, \
+     CFLAGS_windows := -EHsc -D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR -DINLINE=__inline -DUNICODE -D_UNICODE -permissive -std:c++14, \
+ ))
+ 

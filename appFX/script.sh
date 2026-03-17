@@ -64,8 +64,9 @@ local=${1:-"false"}
 sign=${2:-"true"}
 upload=${3:-"true"}
 
-root=$PWD/build
-localPath=$PWD/../local
+root=$PWD
+buildPath=$root/build
+localPath=$root/local
 
 rm -rf build
 
@@ -100,7 +101,7 @@ fi
 
 mkdir hellofx
 cd hellofx || exit
-cp -r "$root/../sample/" .
+cp -r "$root/sample/" .
 if [[ "$local" == true ]]; then
   "$localPath/sdk/mobile/build/jfx/images/jdk/bin/javac" HelloFX.java
   "$localPath/sdk/mobile/build/jfx/images/jdk/bin/jar" cf HelloFX.jar HelloFX.class openduke.png
@@ -140,34 +141,34 @@ else
   cp ./jdk/macos-jdk/lib/tzdb.dat HelloFXMobileApp/HelloFXMobileApp/lib/lib/
 fi
 
-xcodegen generate --spec="$root/HelloFXMobileApp/project.xml" --project="$root/HelloFXMobileApp"
+xcodegen generate --spec="$buildPath/HelloFXMobileApp/project.xml" --project="$buildPath/HelloFXMobileApp"
 
 echo "Archive project"
 cd HelloFXMobileApp || exit
 if [[ "$sign" == true ]]; then
-  xcodebuild -project HelloFXMobileApp.xcodeproj -scheme HelloFXMobileApp -archivePath "$root/Release/HelloFXMobileApp.xcarchive" -configuration Release -destination 'generic/platform=iOS' archive
+  xcodebuild -project HelloFXMobileApp.xcodeproj -scheme HelloFXMobileApp -archivePath "$buildPath/Release/HelloFXMobileApp.xcarchive" -configuration Release -destination 'generic/platform=iOS' archive
 else
-  xcodebuild CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -project HelloFXMobileApp.xcodeproj -scheme HelloFXMobileApp -archivePath "$root/Release/HelloFXMobileApp.xcarchive" -configuration Debug -destination 'generic/platform=iOS' archive
+  xcodebuild CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -project HelloFXMobileApp.xcodeproj -scheme HelloFXMobileApp -archivePath "$buildPath/Release/HelloFXMobileApp.xcarchive" -configuration Debug -destination 'generic/platform=iOS' archive
 fi
 cd ..
 
-if [[ ! -d "$root/Release/HelloFXMobileApp.xcarchive" ]]; then
-    echo "$root/Release/HelloFXMobileApp.xcarchive doesn't exist"
+if [[ ! -d "$buildPath/Release/HelloFXMobileApp.xcarchive" ]]; then
+    echo "$buildPath/Release/HelloFXMobileApp.xcarchive doesn't exist"
     exit 1
 fi
-cp "$root/../exportOptions.plist" "$root/Release/"
-sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" "$root/Release/exportOptions.plist"
+cp "$root/exportOptions.plist" "$buildPath/Release/"
+sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" "$buildPath/Release/exportOptions.plist"
 
 final_step() {
-    rm -rf "$root/HelloFXMobileApp/private_keys"
+    rm -rf "$buildPath/HelloFXMobileApp/private_keys"
 }
-mkdir -p "$root/HelloFXMobileApp/private_keys"
-echo "$API_PRIVATE_KEY" >> "$root/HelloFXMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
+mkdir -p "$buildPath/HelloFXMobileApp/private_keys"
+echo "$API_PRIVATE_KEY" >> "$buildPath/HelloFXMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
 trap final_step EXIT
 
 if [[ "$sign" == true ]] && [[ "$upload" == true ]]; then
   echo "Export and upload ipa"
-  xcodebuild -exportArchive -archivePath "$root/Release/HelloFXMobileApp.xcarchive" -exportPath "$root/Release/Archives/HelloFXMobileApp.ipa" -exportOptionsPlist "$root/Release/exportOptions.plist" -authenticationKeyID "$API_KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID" -authenticationKeyPath "$root/HelloFXMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
+  xcodebuild -exportArchive -archivePath "$buildPath/Release/HelloFXMobileApp.xcarchive" -exportPath "$buildPath/Release/Archives/HelloFXMobileApp.ipa" -exportOptionsPlist "$buildPath/Release/exportOptions.plist" -authenticationKeyID "$API_KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID" -authenticationKeyPath "$buildPath/HelloFXMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
 fi
 
 cd ../..

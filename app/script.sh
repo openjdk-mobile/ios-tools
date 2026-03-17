@@ -65,8 +65,9 @@ local=${1:-"false"}
 sign=${2:-"true"}
 upload=${3:-"true"}
 
-root=$PWD/build
-localPath=$PWD/../local
+root=$PWD
+buildPath=$root/build
+localPath=$root/local
 
 rm -rf build
 
@@ -92,7 +93,7 @@ cd build || exit
 
 mkdir helloworld
 cd helloworld || exit
-cp -r "$root/../sample/" .
+cp -r "$root/sample/" .
 javac HelloWorld.java
 jar cf HelloWorld.jar HelloWorld.class
 cd ..
@@ -125,33 +126,33 @@ else
   cp lib/java_bundle-device/lib/modules HelloMobileApp/HelloMobileApp/lib/lib/
 fi
 
-xcodegen generate --spec="$root/HelloMobileApp/project.xml" --project="$root/HelloMobileApp"
+xcodegen generate --spec="$buildPath/HelloMobileApp/project.xml" --project="$buildPath/HelloMobileApp"
 
 echo "Archive project"
 cd HelloMobileApp || exit
 if [[ "$sign" == true ]]; then
-  xcodebuild -project HelloMobileApp.xcodeproj -scheme HelloMobileApp -archivePath "$root/Release/HelloMobileApp.xcarchive" -configuration Release -destination 'generic/platform=iOS' archive
+  xcodebuild -project HelloMobileApp.xcodeproj -scheme HelloMobileApp -archivePath "$buildPath/Release/HelloMobileApp.xcarchive" -configuration Release -destination 'generic/platform=iOS' archive
 else
-  xcodebuild CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -project HelloMobileApp.xcodeproj -scheme HelloMobileApp -archivePath "$root/Release/HelloMobileApp.xcarchive" -configuration Debug -destination 'generic/platform=iOS' archive
+  xcodebuild CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -project HelloMobileApp.xcodeproj -scheme HelloMobileApp -archivePath "$buildPath/Release/HelloMobileApp.xcarchive" -configuration Debug -destination 'generic/platform=iOS' archive
 fi
 
-if [[ ! -d "$root/Release/HelloMobileApp.xcarchive" ]]; then
-    echo "$root/Release/HelloMobileApp.xcarchive doesn't exist"
+if [[ ! -d "$buildPath/Release/HelloMobileApp.xcarchive" ]]; then
+    echo "$buildPath/Release/HelloMobileApp.xcarchive doesn't exist"
     exit 1
 fi
-cp "$root/../exportOptions.plist" "$root/Release/"
-sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" "$root/Release/exportOptions.plist"
+cp "$root/exportOptions.plist" "$buildPath/Release/"
+sed -i '' "s/GET_DEVELOPMENT_TEAM/$DEVELOPMENT_TEAM/g" "$buildPath/Release/exportOptions.plist"
 
 final_step() {
-    rm -rf "$root/HelloMobileApp/private_keys"
+    rm -rf "$buildPath/HelloMobileApp/private_keys"
 }
-mkdir -p "$root/HelloMobileApp/private_keys"
-echo "$API_PRIVATE_KEY" >> "$root/HelloMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
+mkdir -p "$buildPath/HelloMobileApp/private_keys"
+echo "$API_PRIVATE_KEY" >> "$buildPath/HelloMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
 trap final_step EXIT
 
 if [[ "$sign" == true ]] && [[ "$upload" == true ]]; then
   echo "Export and upload ipa"
-  xcodebuild -exportArchive -archivePath "$root/Release/HelloMobileApp.xcarchive" -exportPath "$root/Release/Archives/HelloMobileApp.ipa" -exportOptionsPlist "$root/Release/exportOptions.plist" -authenticationKeyID "$API_KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID" -authenticationKeyPath "$root/HelloMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
+  xcodebuild -exportArchive -archivePath "$buildPath/Release/HelloMobileApp.xcarchive" -exportPath "$buildPath/Release/Archives/HelloMobileApp.ipa" -exportOptionsPlist "$buildPath/Release/exportOptions.plist" -authenticationKeyID "$API_KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID" -authenticationKeyPath "$buildPath/HelloMobileApp/private_keys/AuthKey_$API_KEY_ID.p8"
 fi
 
 cd ../..

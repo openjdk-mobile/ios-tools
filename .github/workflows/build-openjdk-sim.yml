@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           java-version: '27'
-          distribution: 'oracle-openjdk'
+          distribution: 'temurin'
 
       - name: Download and unzip mobile-support
         env:

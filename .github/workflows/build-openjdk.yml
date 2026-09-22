@@ -32,8 +32,8 @@ jobs:
       - name: Set up JDK 27
         uses: actions/setup-java@v6
         with:
-          java-version: '27'
-          distribution: 'oracle-openjdk'
+          java-version: '26'
+          distribution: 'temurin'
       - run: |
           java --version
           echo "JAVA_HOME: $JAVA_HOME"

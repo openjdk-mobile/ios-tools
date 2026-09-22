@@ -32,11 +32,8 @@ jobs:
       - name: Set up JDK 27
         uses: actions/setup-java@v6
         with:
-          java-version: '26'
+          java-version: '27'
           distribution: 'temurin'
-      - run: |
-          java --version
-          echo "JAVA_HOME: $JAVA_HOME"
 
       - name: Download and unzip mobile-support
         env:

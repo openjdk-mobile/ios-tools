@@ -33,6 +33,9 @@ jobs:
         with:
           java-version: '27'
           distribution: 'oracle-openjdk'
+      - run: |
+          java --version
+          echo "JAVA_HOME: $JAVA_HOME"
 
       - name: Patch and build OpenJDK Mobile sources
         env:

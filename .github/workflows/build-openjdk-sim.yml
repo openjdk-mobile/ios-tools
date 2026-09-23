@@ -54,6 +54,7 @@ jobs:
           cd mobile
           git checkout "$MOBILE_REF"
           cp ../openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
+          git apply ../.github/patches/zero-wx-healing.diff
           
           bash configure \
           --with-conf-name=iossim-aarch64-zero-release \

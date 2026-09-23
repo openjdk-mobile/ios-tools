@@ -1,0 +1,41 @@
+name: HelloFXMobileApp
+options:
+  bundleIdPrefix: com.gluonhq.hellofx
+targets:
+  HelloFXMobileApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    dependencies:
+      - framework: HelloFXMobileApp/OpenJDK.xcframework
+        embed: false
+        link: true
+      - sdk: libz.tbd
+    sources:
+      - path: HelloFXMobileApp
+        excludes: 
+          - "**/lib"
+          - "**/OpenJDK.xcframework"
+      - path: HelloFXMobileApp/lib
+        type: folder
+        buildPhase:
+          resources
+    settings:
+      base:
+        OTHER_LDFLAGS: -lc++
+        ENABLE_TESTABILITY: YES
+        ENABLE_DEBUG_DYLIB: No
+        INFOPLIST_FILE: HelloFXMobileApp/Info.plist
+        GENERATE_INFOPLIST_FILE: Yes
+        PRODUCT_NAME: HelloFXMobileApp
+        PRODUCT_BUNDLE_IDENTIFIER: com.gluonhq.hellofx.HelloFXMobileApp
+        PROVISIONING_PROFILE_SPECIFIER: "HelloFXWorld"
+        DEVELOPMENT_TEAM: GET_DEVELOPMENT_TEAM
+        MARKETING_VERSION: '1.0.1'
+        CURRENT_PROJECT_VERSION: GET_CURRENT_VERSION
+      configs:
+        debug:
+          CODE_SIGN_IDENTITY: iPhone Developer
+        release:
+          CODE_SIGN_IDENTITY: Apple Distribution
+

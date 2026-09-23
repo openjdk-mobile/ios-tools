@@ -1,6 +1,5 @@
 # Run HelloWorld on iOS
 
-
 - [Create HelloWorld in Java](#create-helloworld-in-java)
 - [Create Xcode project](#create-xcode-project)
 - [Edit main.c](#edit-mainc)
@@ -14,6 +13,13 @@
 - [Add HelloWorld.jar](#add-helloworldjar)
 - [Build and Run](#build-and-run)
 
+# HelloWorld App
+
+The following instructions are indicated here for the purpose of showing the logical steps needed to build an iOS application that uses
+Java. These are not meant for production. 
+
+For a more streamlined process, see the actual script that is used to build the HelloMobileApp [here](/app/script.sh) as
+part of this [workflow](/.github/workflows/build-app.yml).
 
 ## Create HelloWorld in Java
 
@@ -41,12 +47,12 @@ jar cf HelloWorld.jar HelloWorld.class
 cd ..
 ```
 
-
 ## Create Xcode project
 
 Start Xcode and create a new project, go to menu File -> New -> Project -> tab: iOS -> select App.
 
-Press Next, and fill out the form. e.g.
+Press Next, and fill out the form, e.g.:
+
 - Name: HelloMobileApp
 - Identifier: com.example.helloworld
 - Interface StoryBoard
@@ -107,7 +113,7 @@ int main(int argc, char *argv[]) {
 
 ## Build or download openjdk/mobile
 
-At the end of this step, you’ll have an xcode framework and the java.base module ready to import in Xcode. You can choose to either download it or build it yourself.
+At the end of this step, you’ll have an iOS framework and the java.base module ready to import in Xcode. You can choose to either download it or build it yourself.
 
 ### Download
 
@@ -132,7 +138,7 @@ Or if you choose to build ffi, follow [these steps](https://github.com/openjdk-m
 
 Follow the instructions at https://github.com/openjdk/mobile/ to build a static image for iOS.
 
-With JDK 24:
+With JDK 25:
 
 ```sh
 git clone https://github.com/openjdk/mobile/
@@ -155,14 +161,13 @@ make CONF=ios-aarch64-zero-release static-libs-image
 
 Follow the instructions [here](https://github.com/openjdk-mobile/ios-tools/blob/main/docs/ga/xcframework.md) to create the Xcode framework.
 
-
 ## Add framework
 
 Click the HelloMobileApp group ([top level](images/helloworld02-toplevel.png)).
 
 Select the `General` tab in the main window and scroll down to `Frameworks, libraries, and embedded content`. Then click the `+` and in the opened dialog choose Add other -> Add files. 
 
-Find the downloaded or built and unpacked OpenJDK.xcframework and choose Open. The framework will be added and you will see [this](images/helloworld03-framework.png).
+Find the downloaded or built and unpacked `OpenJDK.xcframework` and choose Open. The framework will be added and you will see [this](images/helloworld03-framework.png).
 
 ## Add java.base module
 
@@ -170,18 +175,20 @@ Right click on HelloMobileApp target ([inner project](images/helloworld04-inner.
 
 Open the Inspectors using the top-right [icon](images/helloworld05-inspector.png) and open the just created lib folder.
 
-In the inspectors at the right, select Build Rules: Apply Once to Folder, and add target HelloMobileApp. It will look like [this](images/helloworld06-lib.png).
+In the inspectors at the right, select Build Rules: `Apply Once to Folder`, and add target HelloMobileApp. It will look like [this](images/helloworld06-lib.png).
 
 Now select the modules directory and right click. Select “Add files to modules”... 
-Find the java.base directory (either downloaded and unpacked or built in mobile/build/ios-aarch64-zero-release/jdk/modules/)
+
+Find the `java.base` directory (either downloaded and unpacked or built under `mobile/build/ios-aarch64-zero-release/jdk/modules/`)
 Select Copy files to destination.
 
 In the end it will look like [this](images/helloworld07-javabase.png).
 
+*Note*: instead of the `java.base` unpacked directory, the script mentioned earlier actually uses the `modules` file that results after jlink the jmod version of the java.base module. 
 
 ## Add libz
 
-This is needed because libzip.a, created from OpenJDK has unresolved symbols that are implemented by libz.
+This is needed because `libzip.a`, created from OpenJDK has unresolved symbols that are implemented by `libz`.
 
 Go to HelloMobileApp in the left navigation, select target HelloMobileApp and open tab Build Phases and expand [Link binary with Libraries](images/helloworld08-libz.png).
 
@@ -189,7 +196,7 @@ Press `+` and search for `libz.tbd` and add it.
 
 ## Add c++ linker flag
 
-In the tabs on top of the screen, select Build Settings (next to Build Phases), select “All” in the filter section and scroll down to “Linking - General” and doubleclick in the textfield after “Other Linker Flags” to add the following line:
+In the tabs on top of the screen, select Build Settings (next to Build Phases), select “All” in the filter section and scroll down to “Linking - General” and double click in the textfield after “Other Linker Flags” to add the following line:
 
 ```
 -lc++
@@ -197,18 +204,16 @@ In the tabs on top of the screen, select Build Settings (next to Build Phases), 
 
 It will look like [this](images/helloworld09-lcpp.png).
 
-
 ## Add HelloWorld.jar
 
 Select the HelloMobileApp target ([inner project](images/helloworld04-inner.png)).
 
 Right click and select “Add files to “HelloMobileApp”...
-Find HelloWorld.jar from the earlier step and add it. Select copy files to destination.
+Find `HelloWorld.jar` from the earlier step and add it. Select copy files to destination.
 
 Go to the top level HelloMobileApp again and select Build Phases.
 Expand “[Copy Bundle Resources](images/helloworld10-jar.png)” and click + 
 Find HelloWorld.jar and add it.
-
 
 ## Build and Run
 

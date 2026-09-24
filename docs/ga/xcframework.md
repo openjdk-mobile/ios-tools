@@ -5,7 +5,8 @@ The [combine-xcframework.yml](/.github/workflows/combine-xcframework.yml) workfl
 The combine workflow:
 - triggers the OpenJDK mobile builds for device and simulator
 - downloads libffi
-- creates a static library
+- creates a static library. Note that the JNI entry points of the static libraries are kept in the final app by a symbol keeper object
+  that is added to this library, as explained [here](symbol-keeper.md).
 - and then uses `xcodebuild` to combine the libraries and headers into a framework
 
 Most of the work is delegated to a script, allowing non-CI usage. Developers can just change the constants in the script and run it on their local setup.

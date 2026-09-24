@@ -65,7 +65,7 @@ In Xcode in the left navigation, find `main.c` and replace its contents with:
 #import <Foundation/Foundation.h>
 #include "jni.h"
 #include <stdio.h>
-extern void loadfunctions();
+extern void load_functions(void);
 int main(int argc, char *argv[]) {
     JavaVM *jvm;
     JNIEnv *env;
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     vm_args.version = JNI_VERSION_1_8; // needed to initialize JavaVM
     vm_args.nOptions = 1;
     vm_args.options = options;
-    loadfunctions();
+    load_functions();
     fprintf(stderr, "Create JavaVM\n");
     jint res = JNI_CreateJavaVM(&jvm, (void **)&env, &vm_args);
     fprintf(stderr, "Created JavaVM\n");
@@ -132,7 +132,7 @@ Or if you choose to build ffi, follow [these steps](https://github.com/openjdk-m
 
 Follow the instructions at https://github.com/openjdk/mobile/ to build a static image for iOS.
 
-With JDK 24:
+With JDK 26:
 
 ```sh
 git clone https://github.com/openjdk/mobile/

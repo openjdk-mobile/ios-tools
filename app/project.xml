@@ -23,6 +23,7 @@ targets:
     settings:
       base:
         OTHER_LDFLAGS: -lc++
+        STRIP_STYLE: non-global
         ENABLE_TESTABILITY: YES
         ENABLE_DEBUG_DYLIB: No
         INFOPLIST_FILE: HelloMobileApp/Info.plist

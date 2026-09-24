@@ -53,8 +53,7 @@ jobs:
           git clone -- "$MOBILE_REPO" mobile
           cd mobile
           git checkout "$MOBILE_REF"
-          cp ../openjdk-ext/src/hotspot/symbol_keeper.cpp src/hotspot/os/bsd
-          
+
           bash configure \
           --with-conf-name=iossim-aarch64-zero-release \
           --disable-warnings-as-errors \
